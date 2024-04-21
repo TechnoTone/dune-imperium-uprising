@@ -1,0 +1,17 @@
+{
+  "name": "dune-imperium-uprising",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "parcel index.html",
+    "test": "elm-test --watch"
+  },
+  "author": "Tony Hunt",
+  "source": "index.html",
+  "devDependencies": {
+    "@parcel/transformer-elm": "^2.9.3",
+    "@parcel/transformer-less": "^2.9.3",
+    "elm": "^0.19.1-5",
+    "parcel": "^2.9.3",
+    "parcel-transformer-elm-assets": "^1.0.0"
+  }
+}

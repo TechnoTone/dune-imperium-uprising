@@ -1,0 +1,66 @@
+@page-bg-color: #000;
+@spice-orange: #8e5c1d;
+
+body {
+  font-family: "ff10,Trebuchet MS1,Helvetica,sans-serif";
+  background-color: @page-bg-color;
+  margin: 0 auto;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  .menu-bar {
+    position: fixed;
+    color: @spice-orange;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1em;
+    z-index: 1000;
+    padding: 0.25em;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-after;
+    align-items: left;
+
+    a {
+      margin-left: 1em;
+      cursor: pointer
+    }
+  }
+
+  .fullscreen-image-container {
+    position: absolute;
+    left: 0;
+    top: 1.5em;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%-4em;
+    overflow: hidden;
+  }
+
+  .fullscreen-image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%-4em;
+    margin: 0 auto;
+    padding: 0;
+    object-fit: contain;
+
+    &.zoomed-in {
+      // object-fit: none;
+      transform: scale(3)
+    }
+
+    &.zoomed-out {}
+  }
+}

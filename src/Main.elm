@@ -119,7 +119,7 @@ viewScreen model =
             viewFullScreenImage "board.jpg" model
 
         Leaders ->
-            div [] []
+            div [] [ text "Leaders" ]
 
 
 viewFullScreenImage : String -> Model -> Html.Html Msg

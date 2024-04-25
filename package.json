@@ -4,7 +4,7 @@
   "scripts": {
     "start": "npm run copy-images & parcel index.html",
     "clean": "del-cli dist/",
-    "build": "parcel build index.html & npm run copy-images",
+    "build": "npm run copy-images & parcel build index.html",
     "copy-images": "copyfiles -f src/img/board.jpg dist/"
   },
   "author": "Tony Hunt",

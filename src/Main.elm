@@ -116,7 +116,7 @@ viewScreen : Model -> Html.Html Msg
 viewScreen model =
     case model.screen of
         Board ->
-            viewFullScreenImage "ASSET_URL:img/board.jpg" model
+            viewFullScreenImage "board.jpg" model
 
         Leaders ->
             div [] []

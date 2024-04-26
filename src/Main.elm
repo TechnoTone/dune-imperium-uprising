@@ -122,13 +122,27 @@ viewScreen model =
             viewFullScreenImage "board.jpg" model
 
         Leaders ->
-            div [] [ text "Leaders" ]
+            viewLeaders
 
         Cards ->
             div [] [ text "Cards" ]
 
         Manuals ->
             viewManuals
+
+
+viewLeaders : Html.Html Msg
+viewLeaders =
+    div [ class "leaders" ]
+        [ viewLeader "Feyd-Rautha Harkonnen" "feydrauthaharkonnen.png" ]
+
+
+viewLeader : String -> String -> Html.Html Msg
+viewLeader name imageSource =
+    div []
+        [ h1 [] [ text name ]
+        , img [ src imageSource ] []
+        ]
 
 
 viewManuals : Html.Html Msg

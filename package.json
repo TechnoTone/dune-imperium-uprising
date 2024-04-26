@@ -10,8 +10,10 @@
   "author": "Tony Hunt",
   "source": "index.html",
   "devDependencies": {
+    "@parcel/packager-raw-url": "^2.12.0",
     "@parcel/transformer-elm": "^2.9.3",
     "@parcel/transformer-less": "^2.9.3",
+    "@parcel/transformer-webmanifest": "^2.12.0",
     "copyfiles": "^2.4.1",
     "del-cli": "^5.1.0",
     "elm": "^0.19.1-5",

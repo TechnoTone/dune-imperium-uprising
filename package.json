@@ -4,7 +4,7 @@
   "scripts": {
     "start": "npm run copy-static & parcel index.html",
     "clean": "del-cli dist/",
-    "build": "npm run copy-static & parcel build index.html",
+    "build": "parcel build index.html & npm run copy-static",
     "copy-static": "copyfiles -f static/** dist/"
   },
   "author": "Tony Hunt",

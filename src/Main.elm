@@ -4,7 +4,7 @@ import Browser
 import Browser.Dom as Dom
 import Browser.Events as Browser
 import Html exposing (a, button, div, h1, h3, img, span, text)
-import Html.Attributes exposing (class, classList, id, src, style)
+import Html.Attributes exposing (class, classList, href, id, src, style)
 import Html.Events exposing (onClick)
 import Html.Events.Extra.Mouse as Mouse
 import Html.Events.Extra.Touch as Touch exposing (Touch)
@@ -25,6 +25,8 @@ type alias Model =
 type Screen
     = Board
     | Leaders
+    | Cards
+    | Manuals
 
 
 type Orientation
@@ -96,7 +98,7 @@ view model =
     { title = "Dune Imperium: Uprising"
     , body =
         [ div
-            []
+            [ class "screen-container" ]
             [ viewMenuBar model, viewScreen model ]
         ]
     }
@@ -108,6 +110,8 @@ viewMenuBar model =
         [ class "menu-bar" ]
         [ a [ onClick (Show Board) ] [ text "Board" ]
         , a [ onClick (Show Leaders) ] [ text "Leaders" ]
+        , a [ onClick (Show Cards) ] [ text "Cards" ]
+        , a [ onClick (Show Manuals) ] [ text "Manuals" ]
         ]
 
 
@@ -119,6 +123,28 @@ viewScreen model =
 
         Leaders ->
             div [] [ text "Leaders" ]
+
+        Cards ->
+            div [] [ text "Cards" ]
+
+        Manuals ->
+            viewManuals
+
+
+viewManuals : Html.Html Msg
+viewManuals =
+    div [ class "manuals" ]
+        [ viewManual "Rulebook" "rulebook.png" "rulebook.pdf"
+        , viewManual "Supplements" "supplements.png" "supplements.pdf"
+        ]
+
+
+viewManual : String -> String -> String -> Html.Html Msg
+viewManual title imageSource pdfSource =
+    div []
+        [ h1 [] [ text title ]
+        , a [ href pdfSource ] [ img [ src imageSource ] [] ]
+        ]
 
 
 viewFullScreenImage : String -> Model -> Html.Html Msg

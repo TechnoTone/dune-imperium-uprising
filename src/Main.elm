@@ -3,13 +3,12 @@ module Main exposing (Model, Msg(..), initModel, main, subscriptions, update, vi
 import Browser
 import Browser.Dom as Dom
 import Browser.Events as Browser
-import Html exposing (a, button, div, h1, h3, img, text)
+import Html exposing (a, button, div, h1, h3, img, span, text)
 import Html.Attributes exposing (class, classList, id, src, style)
-import Html.Events exposing (onClick, onMouseDown, onMouseOver, onMouseUp)
+import Html.Events exposing (onClick)
 import Html.Events.Extra.Mouse as Mouse
 import Html.Events.Extra.Touch as Touch exposing (Touch)
 import Task
-import Tuple exposing (first)
 
 
 type alias Model =
@@ -181,16 +180,26 @@ update msg model =
             updateModel (\_ -> { model | screen = screen })
 
         FullScreenMouseDown ( x, y ) ->
-            updateModel (\_ -> { model | zoomState = ZoomedIn })
+            updateModel (setZoomPosition ( x, y ) >> setZoomState ZoomedIn)
 
         FullScreenMouseUp ( x, y ) ->
-            updateModel (\_ -> { model | zoomState = ZoomedOut })
+            updateModel (setZoomPosition ( x, y ) >> setZoomState ZoomedOut)
 
         FullScreenMouseOver ( x, y ) ->
-            updateModel (\_ -> { model | zoomPosition = ( x, y ) })
+            updateModel (setZoomPosition ( x, y ))
 
         Touch eventType eventData ->
             ( handleTouch eventType eventData model, Cmd.none )
+
+
+setZoomPosition : ( Float, Float ) -> Model -> Model
+setZoomPosition zoomPosition model =
+    { model | zoomPosition = zoomPosition }
+
+
+setZoomState : ZoomState -> Model -> Model
+setZoomState zoomState model =
+    { model | zoomState = zoomState }
 
 
 setViewport : Dom.Viewport -> Model -> Model
@@ -223,14 +232,32 @@ handleTouch eventType eventData model =
             model
                 |> updateTouches (addTouches eventData.changedTouches)
                 |> updateZoomStateFromTouches
+                |> updateZoomPositionFromTouches
 
         TouchMove ->
             model
+                |> updateTouches (moveTouches eventData.changedTouches)
+                |> updateZoomPositionFromTouches
 
         TouchEnd ->
             model
                 |> updateTouches (removeTouches eventData.changedTouches)
                 |> updateZoomStateFromTouches
+                |> updateZoomPositionFromTouches
+
+
+updateZoomPositionFromTouches : Model -> Model
+updateZoomPositionFromTouches model =
+    let
+        firstTouch =
+            List.head model.touches
+    in
+    case firstTouch of
+        Just touch ->
+            { model | zoomPosition = touch.clientPos }
+
+        Nothing ->
+            model
 
 
 updateZoomStateFromTouches : Model -> Model
@@ -255,6 +282,11 @@ updateTouches fn model =
 addTouches : List Touch -> List Touch -> List Touch
 addTouches newTouches existingTouches =
     List.append existingTouches newTouches
+
+
+moveTouches : List Touch -> List Touch -> List Touch
+moveTouches newTouches _ =
+    newTouches
 
 
 removeTouches : List Touch -> List Touch -> List Touch

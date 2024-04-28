@@ -4,9 +4,8 @@
   "scripts": {
     "start": "parcel index.html",
     "clean": "del-cli dist/**",
-    "build": "copyfiles -a -f -V \"static/**\" dist/",
-    "build2": "copyfiles -f static/** dist/ & parcel build index.html",
-    "copy-static": "copyfiles -f -V static/** dist/"
+    "build": "npm run copy-files & parcel build index.html",
+    "copy-static": "copyfiles -f -V \"static/**\" dist/"
   },
   "author": "Tony Hunt",
   "source": "index.html",

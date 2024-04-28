@@ -134,7 +134,7 @@ viewScreen model =
 viewLeaders : Html.Html Msg
 viewLeaders =
     div [ class "leaders" ]
-        [ viewLeader "Feyd-Rautha Harkonnen" "feydrauthaharkonnen.png" ]
+        [ viewLeader "Feyd-Rautha Harkonnen" "leader-feydrauthaharkonnen.png" ]
 
 
 viewLeader : String -> String -> Html.Html Msg
@@ -148,8 +148,8 @@ viewLeader name imageSource =
 viewManuals : Html.Html Msg
 viewManuals =
     div [ class "manuals" ]
-        [ viewManual "Rulebook" "rulebook.png" "rulebook.pdf"
-        , viewManual "Supplements" "supplements.png" "supplements.pdf"
+        [ viewManual "Rulebook" "manual-rulebook.png" "rulebook.pdf"
+        , viewManual "Supplements" "manual-supplements.png" "supplements.pdf"
         ]
 
 

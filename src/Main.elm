@@ -119,7 +119,7 @@ viewScreen : Model -> Html.Html Msg
 viewScreen model =
     case model.screen of
         Board ->
-            viewFullScreenImage "/static/img/board.jpg" model
+            viewFullScreenImage "board.jpg" model
 
         Leaders ->
             viewLeaders

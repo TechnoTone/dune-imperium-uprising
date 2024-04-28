@@ -2,9 +2,10 @@
   "name": "dune-imperium-uprising",
   "version": "1.0.0",
   "scripts": {
-    "start": "copyfiles -f static/** dist/ & parcel index.html",
+    "start": "parcel index.html",
     "clean": "del-cli dist/**",
-    "build": "copyfiles -f static/** dist/ & parcel build index.html",
+    "build": "copyfiles -f static/** dist/",
+    "build2": "copyfiles -f static/** dist/ & parcel build index.html",
     "copy-static": "copyfiles -f static/** dist/"
   },
   "author": "Tony Hunt",

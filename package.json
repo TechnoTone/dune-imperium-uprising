@@ -5,7 +5,7 @@
     "start": "parcel index.html",
     "clean": "del-cli dist/**",
     "build": "npm run copy-files & parcel build index.html",
-    "copy-static": "copyfiles -f -V \"static/**\" dist/"
+    "copy-static": "copyfiles -a -f -V \"static/**\" dist/"
   },
   "author": "Tony Hunt",
   "source": "index.html",

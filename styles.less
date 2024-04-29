@@ -1,4 +1,4 @@
-@page-bg-color: #000;
+@page-bg-color: #442704;
 @spice-orange: #8e5c1d;
 
 
@@ -21,19 +21,35 @@ body {
     position: absolute;
   }
 
-  .menu-bar {
-    padding: 0.25em;
-    font-size: 2vw;
+  h1 {
+    font-size: 8vw;
+    text-align: center;
+  }
+  h3 {
+    font-size: 5vw;
+    text-align: center;
+  }
 
-    a {
-      margin-left: 1em;
-      cursor: pointer;
+  .home-button {}
 
-      &:hover {
-        color: white;
+  .menu-tiles{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .menu-tile{
+      h3{
+        margin-top: 0;
+        margin-bottom: 0.5em;
       }
 
+      img {
+        border-radius: 1vmin;
+      }
+
+      padding: 2vmin;
     }
+
   }
 
   .fullscreen-image-container {

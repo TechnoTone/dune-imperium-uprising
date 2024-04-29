@@ -72,7 +72,7 @@ type Action
 initModel : () -> ( Model, Cmd Msg )
 initModel =
     always <|
-        ( { screen = Board
+        ( { screen = Menu
           , menu = Hidden
           , viewportSize = ( 0, 0 )
           , viewOrientation = Portrait
@@ -100,20 +100,16 @@ view model =
     , body =
         [ div
             [ class "screen-container" ]
-            [ viewMenuBar model, viewScreen model ]
+            [ homeButton, viewScreen model ]
         ]
     }
 
 
-viewMenuBar : Model -> Html.Html Msg
-viewMenuBar model =
+homeButton : Html.Html Msg
+homeButton =
     div
-        [ class "menu-bar" ]
-        [ a [ onClick (Show Board) ] [ text "Board" ]
-        , a [ onClick (Show Leaders) ] [ text "Leaders" ]
-        , a [ onClick (Show Cards) ] [ text "Cards" ]
-        , a [ onClick (Show Manuals) ] [ text "Manuals" ]
-        ]
+        [ class "home-button" ]
+        []
 
 
 viewScreen : Model -> Html.Html Msg
@@ -137,33 +133,50 @@ viewScreen model =
 
 viewMenu : Html.Html Msg
 viewMenu =
-    div [ class "menu" ]
+    let
+        tile : ( String, String, Screen ) -> Html.Html Msg
+        tile ( name, imageSource, screen ) =
+            div [ class "menu-tile" ]
+                [ h3 [] [ text name ]
+                , a [ onClick (Show screen) ] [ img [ src imageSource ] [] ]
+                ]
+    in
+    div []
         [ h1 [] [ text "Dune Imperium: Uprising" ]
-        , button [ onClick (Show Board) ] [ img [ src "board.jog" ] [] ]
+        , div [ class "menu-tiles" ]
+            (List.map tile
+                [ ( "Board", "menu-board.jpg", Board )
+                , ( "Leaders", "menu-leaders.png", Leaders )
+                , ( "Cards", "menu-cards.jpg", Cards )
+                , ( "Manuals", "menu-manuals.png", Manuals )
+                ]
+            )
         ]
 
 
 viewLeaders : Html.Html Msg
 viewLeaders =
+    let
+        leader : ( String, String ) -> Html.Html Msg
+        leader ( name, imageSource ) =
+            div [ class "leader" ]
+                [ img [ src imageSource ] []
+                ]
+    in
     div [ class "leaders" ]
-        [ viewLeader "Maud`Dib" "leader-mauddib.png"
-        , viewLeader "Gurney Halleck" "leader-gurneyhalleck.png"
-        , viewLeader "Feyd-Rautha Harkonnen" "leader-feydrauthaharkonnen.png"
-        , viewLeader "Lady Margot Fenring" "leader-ladymargotfenring.png"
-        , viewLeader "Lady Amber Metulli" "leader-ladyambermetulli.png"
-        , viewLeader "Princess Irulan" "leader-princessirulan.png"
-        , viewLeader "Lady Jessica" "leader-ladyjessica.png"
-        , viewLeader "Reverend Mother Jessica" "leader-reverendmotherjessica.png"
-        , viewLeader "Shaddam Conring IV" "leader-shaddamconringiv.png"
-        , viewLeader "Staban Tuer" "leader-stabantuer.png"
-        ]
-
-
-viewLeader : String -> String -> Html.Html Msg
-viewLeader name imageSource =
-    div [ class "leader" ]
-        [ img [ src imageSource ] []
-        ]
+        (List.map leader
+            [ ( "Maud`Dib", "leader-mauddib.png" )
+            , ( "Gurney Halleck", "leader-gurneyhalleck.png" )
+            , ( "Feyd-Rautha Harkonnen", "leader-feydrauthaharkonnen.png" )
+            , ( "Lady Margot Fenring", "leader-ladymargotfenring.png" )
+            , ( "Lady Amber Metulli", "leader-ladyambermetulli.png" )
+            , ( "Princess Irulan", "leader-princessirulan.png" )
+            , ( "Lady Jessica", "leader-ladyjessica.png" )
+            , ( "Reverend Mother Jessica", "leader-reverendmotherjessica.png" )
+            , ( "Shaddam Conring IV", "leader-shaddamconringiv.png" )
+            , ( "Staban Tuer", "leader-stabantuer.png" )
+            ]
+        )
 
 
 viewManuals : Html.Html Msg

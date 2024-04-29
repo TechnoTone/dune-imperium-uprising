@@ -95,6 +95,30 @@ body {
   }
 
   .leaders {
+    .avatars{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      margin-top: 1em;
+      margin-bottom: 1em;
+    
+      .avatar{
+        padding-left: 1em;
+        padding-right: 1em;
+        cursor: pointer;
+        background-color: black;
+
+        flex: 1 1 4vw;
+
+        img {
+          border-radius: 1vmin;
+          width:4vw;
+          height:4vw;
+        }
+      }
+    }
+
     .leader {
       margin: 1em;
       img {

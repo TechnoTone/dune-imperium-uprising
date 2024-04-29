@@ -25,10 +25,23 @@ type alias Model =
 type Screen
     = Menu
     | Board
-    | Leaders
+    | Leaders Leader
     | Cards
     | Manuals
     | CombatManual
+
+
+type Leader
+    = MaudDib
+    | GurneyHalleck
+    | FeydRauthaHarkonnen
+    | LadyMargotFenring
+    | LadyAmberMetulli
+    | PrincessIrulan
+    | LadyJessica
+    | ReverendMotherJessica
+    | ShaddamConringIV
+    | StabanTuer
 
 
 type Orientation
@@ -131,8 +144,8 @@ viewScreen model =
         Board ->
             viewFullScreenImage "board.jpg" model
 
-        Leaders ->
-            viewLeaders
+        Leaders leader ->
+            viewLeaders leader
 
         Cards ->
             div [] [ text "Cards" ]
@@ -148,35 +161,69 @@ viewMenu : Html.Html Msg
 viewMenu =
     tileList "Dune Imperium: Uprising"
         [ ( "Board", "menu-board.jpg", onClick <| Show Board )
-        , ( "Leaders", "menu-leaders.png", onClick <| Show Leaders )
+        , ( "Leaders", "menu-leaders.png", onClick <| Show (Leaders MaudDib) )
         , ( "Cards", "menu-cards.jpg", onClick <| Show Cards )
         , ( "Manuals", "menu-manuals.png", onClick <| Show Manuals )
         ]
 
 
-viewLeaders : Html.Html Msg
-viewLeaders =
+viewLeaders : Leader -> Html.Html Msg
+viewLeaders currentLeader =
     let
-        leader : ( String, String ) -> Html.Html Msg
-        leader ( name, imageSource ) =
-            div [ class "leader" ]
-                [ img [ src imageSource ] []
+        avatar : ( String, Leader ) -> Html.Html Msg
+        avatar ( imageSource, leader ) =
+            div
+                [ class "avatar" ]
+                [ a
+                    [ onClick <| Show (Leaders leader) ]
+                    [ img [ src imageSource ] [] ]
                 ]
     in
     div [ class "leaders" ]
-        (List.map leader
-            [ ( "Maud`Dib", "leader-mauddib.png" )
-            , ( "Gurney Halleck", "leader-gurneyhalleck.png" )
-            , ( "Feyd-Rautha Harkonnen", "leader-feydrauthaharkonnen.png" )
-            , ( "Lady Margot Fenring", "leader-ladymargotfenring.png" )
-            , ( "Lady Amber Metulli", "leader-ladyambermetulli.png" )
-            , ( "Princess Irulan", "leader-princessirulan.png" )
-            , ( "Lady Jessica", "leader-ladyjessica.png" )
-            , ( "Reverend Mother Jessica", "leader-reverendmotherjessica.png" )
-            , ( "Shaddam Conring IV", "leader-shaddamconringiv.png" )
-            , ( "Staban Tuer", "leader-stabantuer.png" )
+        [ div
+            [ class "avatars" ]
+            [ avatar ( "avatar-mauddib.png", MaudDib )
+            , avatar ( "avatar-gurneyhalleck.png", GurneyHalleck )
             ]
-        )
+        , div
+            [ class "leader" ]
+            [ img
+                [ src
+                    (case currentLeader of
+                        MaudDib ->
+                            "leader-mauddib.png"
+
+                        GurneyHalleck ->
+                            "leader-gurneyhalleck.png"
+
+                        FeydRauthaHarkonnen ->
+                            "leader-feydrauthaharkonnen.png"
+
+                        LadyMargotFenring ->
+                            "leader-ladymargotfenring.png"
+
+                        LadyAmberMetulli ->
+                            "leader-ladyambermetulli.png"
+
+                        PrincessIrulan ->
+                            "leader-princessirulan.png"
+
+                        LadyJessica ->
+                            "leader-ladyjessica.png"
+
+                        ReverendMotherJessica ->
+                            "leader-reverendmotherjessica.png"
+
+                        ShaddamConringIV ->
+                            "leader-shaddamconringiv.png"
+
+                        StabanTuer ->
+                            "leader-stabantuer.png"
+                    )
+                ]
+                []
+            ]
+        ]
 
 
 viewManuals : Html.Html Msg

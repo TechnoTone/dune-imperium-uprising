@@ -18,9 +18,6 @@ body {
   }
 
   .screen-container {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -74,19 +71,17 @@ body {
 
   .fullscreen-image-container {
     overflow: hidden;
-    flex-grow: 1;
+    display: flex;
+    width: 100%;
+    height: 100%;
   }
 
   .fullscreen-image {
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
     margin: 0 auto;
     padding: 0;
     object-fit: contain;
+    min-width: 0;
+    border-radius: 0.5em;
 
     &.zoomed-in {
       // object-fit: none;
@@ -97,24 +92,25 @@ body {
   }
 
   .leaders {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
     .avatars {
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
       justify-content: center;
       margin-top: 1em;
-      margin-bottom: 1em;
 
       .avatar {
         padding-left: 1em;
-        padding-right: 1em;
         cursor: pointer;
-        background-color: black;
-
-        flex: 1 1 4vw;
 
         img {
-          border-radius: 1vmin;
+          border-radius: 2vmin;
           width: 4vw;
           height: 4vw;
         }
@@ -122,9 +118,15 @@ body {
     }
 
     .leader {
-      margin: 1em;
+      width: 100%;
+      height: 100%;
+      display: flex;
 
       img {
+        margin: 0 auto;
+        padding: 0;
+        object-fit: contain;
+        min-width: 0;
         border-radius: 2vmin;
       }
     }
@@ -139,13 +141,6 @@ body {
       width: 30vw;
       height: 30vh;
       object-fit: contain;
-    }
-  }
-
-  .leaders {
-    img {
-      width: 100%;
-
     }
   }
 }

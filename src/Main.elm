@@ -118,8 +118,12 @@ view model =
     { title = "Dune Imperium: Uprising"
     , body =
         [ div
-            [ class "screen-container" ]
-            [ homeButton model, viewScreen model ]
+            []
+            [ homeButton model
+            , div
+                [ class "screen-container" ]
+                [ viewScreen model ]
+            ]
         ]
     }
 
@@ -182,8 +186,16 @@ viewLeaders currentLeader =
     div [ class "leaders" ]
         [ div
             [ class "avatars" ]
-            [ avatar ( "avatar-mauddib.png", MaudDib )
-            , avatar ( "avatar-gurneyhalleck.png", GurneyHalleck )
+            [ avatar ( "avatar-mauddib.jpg", MaudDib )
+            , avatar ( "avatar-gurneyhalleck.jpg", GurneyHalleck )
+            , avatar ( "avatar-feydrauthaharkonnen.jpg", FeydRauthaHarkonnen )
+            , avatar ( "avatar-ladymargotfenring.jpg", LadyMargotFenring )
+            , avatar ( "avatar-ladyambermetulli.jpg", LadyAmberMetulli )
+            , avatar ( "avatar-princessirulan.jpg", PrincessIrulan )
+            , avatar ( "avatar-ladyjessica.jpg", LadyJessica )
+            , avatar ( "avatar-reverendmotherjessica.jpg", ReverendMotherJessica )
+            , avatar ( "avatar-shaddamconringiv.jpg", ShaddamConringIV )
+            , avatar ( "avatar-stabantuer.jpg", StabanTuer )
             ]
         , div
             [ class "leader" ]
@@ -252,7 +264,12 @@ viewFullScreenImage url { zoomState, zoomPosition, viewportSize } =
                 ]
 
             ZoomedIn ->
-                [ img [ class "fullscreen-image zoomed-in", src url, zoomOffset zoomPosition viewportSize ] []
+                [ img
+                    [ class "fullscreen-image zoomed-in"
+                    , src url
+                    , zoomOffset zoomPosition viewportSize
+                    ]
+                    []
                 ]
         )
 
@@ -260,6 +277,23 @@ viewFullScreenImage url { zoomState, zoomPosition, viewportSize } =
 zoomOffset : ( Float, Float ) -> ( Float, Float ) -> Html.Attribute msg
 zoomOffset ( xZoom, yZoom ) ( xTotal, yTotal ) =
     style "transform" ("scale(2.5) translate(" ++ String.fromFloat (xTotal / 2 - xZoom) ++ "px, " ++ String.fromFloat (yTotal / 2 - yZoom) ++ "px)")
+
+
+
+-- let
+--     xPercent =
+--         xZoom / xTotal * -100 + 50
+--     yPercent =
+--         yZoom / yTotal * -100 + 50
+-- in
+-- style
+--     "transform"
+--     ("scale(2.5) translate("
+--         ++ String.fromFloat xPercent
+--         ++ "%,"
+--         ++ String.fromFloat yPercent
+--         ++ "%)"
+--     )
 
 
 tileList : String -> List ( String, String, Attribute Msg ) -> Html.Html Msg

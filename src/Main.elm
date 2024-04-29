@@ -23,7 +23,8 @@ type alias Model =
 
 
 type Screen
-    = Board
+    = Menu
+    | Board
     | Leaders
     | Cards
     | Manuals
@@ -118,6 +119,9 @@ viewMenuBar model =
 viewScreen : Model -> Html.Html Msg
 viewScreen model =
     case model.screen of
+        Menu ->
+            viewMenu
+
         Board ->
             viewFullScreenImage "board.jpg" model
 
@@ -131,17 +135,34 @@ viewScreen model =
             viewManuals
 
 
+viewMenu : Html.Html Msg
+viewMenu =
+    div [ class "menu" ]
+        [ h1 [] [ text "Dune Imperium: Uprising" ]
+        , button [ onClick (Show Board) ] [ img [ src "board.jog" ] [] ]
+        ]
+
+
 viewLeaders : Html.Html Msg
 viewLeaders =
     div [ class "leaders" ]
-        [ viewLeader "Feyd-Rautha Harkonnen" "leader-feydrauthaharkonnen.png" ]
+        [ viewLeader "Maud`Dib" "leader-mauddib.png"
+        , viewLeader "Gurney Halleck" "leader-gurneyhalleck.png"
+        , viewLeader "Feyd-Rautha Harkonnen" "leader-feydrauthaharkonnen.png"
+        , viewLeader "Lady Margot Fenring" "leader-ladymargotfenring.png"
+        , viewLeader "Lady Amber Metulli" "leader-ladyambermetulli.png"
+        , viewLeader "Princess Irulan" "leader-princessirulan.png"
+        , viewLeader "Lady Jessica" "leader-ladyjessica.png"
+        , viewLeader "Reverend Mother Jessica" "leader-reverendmotherjessica.png"
+        , viewLeader "Shaddam Conring IV" "leader-shaddamconringiv.png"
+        , viewLeader "Staban Tuer" "leader-stabantuer.png"
+        ]
 
 
 viewLeader : String -> String -> Html.Html Msg
 viewLeader name imageSource =
-    div []
-        [ h1 [] [ text name ]
-        , img [ src imageSource ] []
+    div [ class "leader" ]
+        [ img [ src imageSource ] []
         ]
 
 

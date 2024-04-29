@@ -13,7 +13,6 @@ import Task
 
 type alias Model =
     { screen : Screen
-    , menu : MenuVisibility
     , viewportSize : ( Float, Float )
     , viewOrientation : Orientation
     , zoomPosition : ( Float, Float )
@@ -49,11 +48,6 @@ type Orientation
     | Landscape
 
 
-type MenuVisibility
-    = Hidden
-    | Visible
-
-
 type ZoomState
     = ZoomedOut
     | ZoomedIn
@@ -87,7 +81,6 @@ initModel : () -> ( Model, Cmd Msg )
 initModel =
     always <|
         ( { screen = Menu
-          , menu = Hidden
           , viewportSize = ( 0, 0 )
           , viewOrientation = Portrait
           , zoomPosition = ( 0, 0 )

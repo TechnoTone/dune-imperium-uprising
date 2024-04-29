@@ -18,6 +18,7 @@ type alias Model =
     , zoomPosition : ( Float, Float )
     , zoomState : ZoomState
     , touches : List Touch
+    , cardFilters : CardFilters
     }
 
 
@@ -53,6 +54,11 @@ type ZoomState
     | ZoomedIn
 
 
+type alias CardFilters =
+    { persuasianCost : Maybe Int
+    }
+
+
 type Msg
     = GotViewport Dom.Viewport
     | WindowResize Int Int
@@ -86,9 +92,15 @@ initModel =
           , zoomPosition = ( 0, 0 )
           , zoomState = ZoomedOut
           , touches = []
+          , cardFilters = initCardFilters
           }
         , Task.perform GotViewport Dom.getViewport
         )
+
+
+initCardFilters : CardFilters
+initCardFilters =
+    { persuasianCost = Nothing }
 
 
 
@@ -145,7 +157,7 @@ viewScreen model =
             viewLeaders leader
 
         Cards ->
-            div [] [ text "Cards" ]
+            viewCards model.cardFilters
 
         Manuals ->
             viewManuals
@@ -308,6 +320,11 @@ tileList heading tiles =
         [ h1 [] [ text heading ]
         , div [ class "tiles" ] (List.map tile tiles)
         ]
+
+
+viewCards : CardFilters -> Html.Html Msg
+viewCards filters =
+    div [] []
 
 
 

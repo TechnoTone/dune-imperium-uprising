@@ -3,7 +3,7 @@ module Main exposing (Model, Msg(..), initModel, main, subscriptions, update, vi
 import Browser
 import Browser.Dom as Dom
 import Browser.Events as Browser
-import Html exposing (a, button, div, h1, h3, img, span, text)
+import Html exposing (Attribute, a, button, div, h1, h3, img, span, text)
 import Html.Attributes exposing (class, classList, href, id, src, style)
 import Html.Events exposing (onClick)
 import Html.Events.Extra.Mouse as Mouse
@@ -28,6 +28,7 @@ type Screen
     | Leaders
     | Cards
     | Manuals
+    | CombatManual
 
 
 type Orientation
@@ -94,22 +95,31 @@ initModel =
 -}
 
 
+nothing : Html.Html Msg
+nothing =
+    text ""
+
+
 view : Model -> Browser.Document Msg
 view model =
     { title = "Dune Imperium: Uprising"
     , body =
         [ div
             [ class "screen-container" ]
-            [ homeButton, viewScreen model ]
+            [ homeButton model, viewScreen model ]
         ]
     }
 
 
-homeButton : Html.Html Msg
-homeButton =
-    div
-        [ class "home-button" ]
-        []
+homeButton : Model -> Html.Html Msg
+homeButton model =
+    if model.screen == Menu then
+        nothing
+
+    else
+        div
+            [ class "home-button", onClick <| Show Menu ]
+            [ img [ src "home.png" ] [] ]
 
 
 viewScreen : Model -> Html.Html Msg
@@ -130,27 +140,17 @@ viewScreen model =
         Manuals ->
             viewManuals
 
+        CombatManual ->
+            viewFullScreenImage "combatreference.png" model
+
 
 viewMenu : Html.Html Msg
 viewMenu =
-    let
-        tile : ( String, String, Screen ) -> Html.Html Msg
-        tile ( name, imageSource, screen ) =
-            div [ class "menu-tile" ]
-                [ h3 [] [ text name ]
-                , a [ onClick (Show screen) ] [ img [ src imageSource ] [] ]
-                ]
-    in
-    div []
-        [ h1 [] [ text "Dune Imperium: Uprising" ]
-        , div [ class "menu-tiles" ]
-            (List.map tile
-                [ ( "Board", "menu-board.jpg", Board )
-                , ( "Leaders", "menu-leaders.png", Leaders )
-                , ( "Cards", "menu-cards.jpg", Cards )
-                , ( "Manuals", "menu-manuals.png", Manuals )
-                ]
-            )
+    tileList "Dune Imperium: Uprising"
+        [ ( "Board", "menu-board.jpg", onClick <| Show Board )
+        , ( "Leaders", "menu-leaders.png", onClick <| Show Leaders )
+        , ( "Cards", "menu-cards.jpg", onClick <| Show Cards )
+        , ( "Manuals", "menu-manuals.png", onClick <| Show Manuals )
         ]
 
 
@@ -181,17 +181,10 @@ viewLeaders =
 
 viewManuals : Html.Html Msg
 viewManuals =
-    div [ class "manuals" ]
-        [ viewManual "Rulebook" "manual-rulebook.png" "rulebook.pdf"
-        , viewManual "Supplements" "manual-supplements.png" "supplements.pdf"
-        ]
-
-
-viewManual : String -> String -> String -> Html.Html Msg
-viewManual title imageSource pdfSource =
-    div []
-        [ h1 [] [ text title ]
-        , a [ href pdfSource ] [ img [ src imageSource ] [] ]
+    tileList "Manuals"
+        [ ( "Rulebook (pdf)", "manual-rulebook.png", href "rulebook.pdf" )
+        , ( "Supplements (pdf)", "manual-supplements.png", href "supplements.pdf" )
+        , ( "Combat", "manual-combat.png", onClick <| Show CombatManual )
         ]
 
 
@@ -220,6 +213,27 @@ viewFullScreenImage url { zoomState, zoomPosition, viewportSize } =
 zoomOffset : ( Float, Float ) -> ( Float, Float ) -> Html.Attribute msg
 zoomOffset ( xZoom, yZoom ) ( xTotal, yTotal ) =
     style "transform" ("scale(2.5) translate(" ++ String.fromFloat (xTotal / 2 - xZoom) ++ "px, " ++ String.fromFloat (yTotal / 2 - yZoom) ++ "px)")
+
+
+tileList : String -> List ( String, String, Attribute Msg ) -> Html.Html Msg
+tileList heading tiles =
+    let
+        tile : ( String, String, Attribute Msg ) -> Html.Html Msg
+        tile ( name, imageSource, attr ) =
+            div [ class "" ]
+                [ a [ attr ]
+                    [ div
+                        [ class "tile" ]
+                        [ h3 [] [ text name ]
+                        , img [ src imageSource ] []
+                        ]
+                    ]
+                ]
+    in
+    div []
+        [ h1 [] [ text heading ]
+        , div [ class "tiles" ] (List.map tile tiles)
+        ]
 
 
 

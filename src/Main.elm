@@ -18,7 +18,7 @@ type alias Model =
     , zoomPosition : ( Float, Float )
     , zoomState : ZoomState
     , touches : List Touch
-    , cardFilters : CardFilters
+    , cardScreenOptions : CardScreenOptions
     }
 
 
@@ -44,6 +44,20 @@ type Leader
     | StabanTuer
 
 
+type alias CardScreenOptions =
+    { cardOrder : CardOrder
+    , nameSearchInput : String
+    }
+
+
+type CardOrder
+    = CardOrderByName
+    | CardOrderByPersuasionCost
+    | CardOrderByAgentAccess
+    | CardOrderByFactionSynergy
+    | CardOrderByClass
+
+
 type Orientation
     = Portrait
     | Landscape
@@ -52,11 +66,6 @@ type Orientation
 type ZoomState
     = ZoomedOut
     | ZoomedIn
-
-
-type alias CardFilters =
-    { persuasianCost : Maybe Int
-    }
 
 
 type Msg
@@ -92,15 +101,15 @@ initModel =
           , zoomPosition = ( 0, 0 )
           , zoomState = ZoomedOut
           , touches = []
-          , cardFilters = initCardFilters
+          , cardScreenOptions = initCardScreenOptions
           }
         , Task.perform GotViewport Dom.getViewport
         )
 
 
-initCardFilters : CardFilters
-initCardFilters =
-    { persuasianCost = Nothing }
+initCardScreenOptions : CardScreenOptions
+initCardScreenOptions =
+    CardScreenOptions CardOrderByName ""
 
 
 
@@ -124,7 +133,7 @@ view model =
     , body =
         [ div
             []
-            [ homeButton model
+            [ buttonBar model
             , div
                 [ class "screen-container" ]
                 [ viewScreen model ]
@@ -133,15 +142,37 @@ view model =
     }
 
 
-homeButton : Model -> Html.Html Msg
-homeButton model =
-    if model.screen == Menu then
-        nothing
+buttonBar : Model -> Html.Html Msg
+buttonBar model =
+    let
+        homeButton : Html.Html Msg
+        homeButton =
+            div
+                [ class "home-button", onClick <| Show Menu ]
+                [ img [ src "home.png" ] [] ]
 
-    else
-        div
-            [ class "home-button", onClick <| Show Menu ]
-            [ img [ src "home.png" ] [] ]
+        cardOptionButton : Html.Html Msg
+        cardOptionButton =
+            nothing
+
+        cardFilterInput : Html.Html Msg
+        cardFilterInput =
+            nothing
+    in
+    case model.screen of
+        Menu ->
+            nothing
+
+        Cards ->
+            div
+                [ class "button-bar" ]
+                [ homeButton
+                , cardOptionButton
+                , cardFilterInput
+                ]
+
+        _ ->
+            div [ class "button-bar" ] [ homeButton ]
 
 
 viewScreen : Model -> Html.Html Msg
@@ -157,7 +188,7 @@ viewScreen model =
             viewLeaders leader
 
         Cards ->
-            viewCards model.cardFilters
+            viewCards model.cardScreenOptions
 
         Manuals ->
             viewManuals
@@ -322,11 +353,16 @@ tileList heading tiles =
         ]
 
 
-viewCards : CardFilters -> Html.Html Msg
-viewCards filters =
-    div []
-        [ h1 [] [ text "Under Construction" ]
+viewCards : CardScreenOptions -> Html.Html Msg
+viewCards options =
+    div [ class "cards-container" ]
+        [ viewCardList options
         ]
+
+
+viewCardList : CardScreenOptions -> Html.Html Msg
+viewCardList options =
+    nothing
 
 
 

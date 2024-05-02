@@ -58,12 +58,60 @@ body {
     gap: 1vmin;
 
     .home-button {
-      cursor: pointer;
       display: flex;
 
       img {
+        cursor: pointer;
         width: 8vmin;
         object-fit: contain;
+      }
+    }
+
+    .card-order {
+      display: flex;
+
+      .icon {
+        display: flex;
+        height: 8vmin;
+      }
+
+      .list {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid @orange1;
+        background-color: @orange4;
+
+        .item {
+          display: flex;
+          flex-direction: row;
+          height: 8vmin;
+          align-items: center;
+          padding: 2vmin;
+
+          .icon {
+            display: flex;
+            height: 8vmin;
+          }
+
+
+          &:hover {
+            background-color: @orange2;
+
+          }
+
+        }
+
+        .current {
+          background-color: @orange3;
+        }
+      }
+
+      img {
+        cursor: pointer;
+        width: 6vmin;
+        object-fit: contain;
+        margin-right: 2vmin;
       }
     }
 

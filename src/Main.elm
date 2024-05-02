@@ -3,9 +3,9 @@ module Main exposing (Model, Msg(..), initModel, main, subscriptions, update, vi
 import Browser
 import Browser.Dom as Dom
 import Browser.Events as Browser
-import Html exposing (Attribute, a, button, div, h1, h3, img, span, text)
-import Html.Attributes exposing (class, classList, href, id, src, style)
-import Html.Events exposing (onClick)
+import Html exposing (Attribute, a, button, div, h1, h3, img, input, span, text)
+import Html.Attributes exposing (class, classList, href, id, placeholder, src, style, value)
+import Html.Events exposing (onClick, onInput)
 import Html.Events.Extra.Mouse as Mouse
 import Html.Events.Extra.Touch as Touch exposing (Touch)
 import Task
@@ -46,7 +46,7 @@ type Leader
 
 type alias CardScreenOptions =
     { cardOrder : CardOrder
-    , nameSearchInput : String
+    , cardFilter : String
     }
 
 
@@ -76,6 +76,7 @@ type Msg
     | FullScreenMouseUp ( Float, Float )
     | FullScreenMouseOver ( Float, Float )
     | Touch TouchEventType Touch.Event
+    | CardFilterChange String
 
 
 type TouchEventType
@@ -155,9 +156,11 @@ buttonBar model =
         cardOptionButton =
             nothing
 
-        cardFilterInput : Html.Html Msg
-        cardFilterInput =
-            nothing
+        cardFilterInput : CardScreenOptions -> Html.Html Msg
+        cardFilterInput options =
+            div
+                [ class "card-filter" ]
+                [ input [ placeholder "Filter", value options.cardFilter, onInput CardFilterChange ] [] ]
     in
     case model.screen of
         Menu ->
@@ -168,7 +171,7 @@ buttonBar model =
                 [ class "button-bar" ]
                 [ homeButton
                 , cardOptionButton
-                , cardFilterInput
+                , cardFilterInput model.cardScreenOptions
                 ]
 
         _ ->
@@ -385,6 +388,10 @@ update msg model =
         updateModel : (Model -> Model) -> ( Model, Cmd msg )
         updateModel fn =
             ( fn model, Cmd.none )
+
+        updateCardScreenOptions : (CardScreenOptions -> CardScreenOptions) -> ( Model, Cmd msg )
+        updateCardScreenOptions fn =
+            ( { model | cardScreenOptions = fn model.cardScreenOptions }, Cmd.none )
     in
     case msg of
         GotViewport viewPort ->
@@ -407,6 +414,14 @@ update msg model =
 
         Touch eventType eventData ->
             ( handleTouch eventType eventData model, Cmd.none )
+
+        CardFilterChange value ->
+            updateCardScreenOptions (setCardFilter value)
+
+
+setCardFilter : String -> CardScreenOptions -> CardScreenOptions
+setCardFilter value options =
+    { options | cardFilter = value }
 
 
 setZoomPosition : ( Float, Float ) -> Model -> Model

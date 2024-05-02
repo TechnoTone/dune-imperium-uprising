@@ -3,6 +3,7 @@ module Main exposing (Model, Msg(..), initModel, main, subscriptions, update, vi
 import Browser
 import Browser.Dom as Dom
 import Browser.Events as Browser
+import Cards exposing (CardOptions, CardOrderBy(..), getCards)
 import Html exposing (Attribute, a, button, div, h1, h3, img, input, span, text)
 import Html.Attributes exposing (class, classList, href, id, placeholder, src, style, value)
 import Html.Events exposing (onClick, onInput)
@@ -18,7 +19,8 @@ type alias Model =
     , zoomPosition : ( Float, Float )
     , zoomState : ZoomState
     , touches : List Touch
-    , cardScreenOptions : CardScreenOptions
+    , cardBarView : CardBarView
+    , cardOptions : CardOptions
     }
 
 
@@ -44,23 +46,9 @@ type Leader
     | StabanTuer
 
 
-type alias CardScreenOptions =
-    { cardOrder : CardOrder
-    , cardFilter : String
-    }
-
-
-type CardOrder
-    = CardOrderIcon CardOrderBy
-    | CardOrderList CardOrderBy
-
-
-type CardOrderBy
-    = CardOrderByAz
-    | CardOrderByPersuasionCost
-    | CardOrderByAgentAccess
-    | CardOrderByFactionSynergy
-    | CardOrderByTier
+type CardBarView
+    = CardIcon
+    | CardList
 
 
 type Orientation
@@ -81,8 +69,8 @@ type Msg
     | FullScreenMouseUp ( Float, Float )
     | FullScreenMouseOver ( Float, Float )
     | Touch TouchEventType Touch.Event
-    | ShowCardOrderList CardOrderBy
-    | ShowCardOrderIcon CardOrderBy
+    | ShowCardBarIcon CardOrderBy
+    | ShowCardBarList
     | CardFilterChange String
 
 
@@ -109,15 +97,11 @@ initModel =
           , zoomPosition = ( 0, 0 )
           , zoomState = ZoomedOut
           , touches = []
-          , cardScreenOptions = initCardScreenOptions
+          , cardBarView = CardIcon
+          , cardOptions = CardOptions CardOrderByAz ""
           }
         , Task.perform GotViewport Dom.getViewport
         )
-
-
-initCardScreenOptions : CardScreenOptions
-initCardScreenOptions =
-    CardScreenOptions (CardOrderIcon CardOrderByAz) ""
 
 
 
@@ -159,20 +143,26 @@ buttonBar model =
                 [ class "home-button", onClick <| Show Menu ]
                 [ img [ src "home.png" ] [] ]
 
-        cardOptionButton : CardScreenOptions -> Html.Html Msg
-        cardOptionButton options =
-            case options.cardOrder of
-                CardOrderIcon orderBy ->
-                    viewCardOrderIcon orderBy
+        cardOptionButton : Html.Html Msg
+        cardOptionButton =
+            case model.cardBarView of
+                CardIcon ->
+                    viewCardBarIcon model.cardOptions.orderBy
 
-                CardOrderList orderBy ->
-                    viewCardOrderList orderBy
+                CardList ->
+                    viewCardBarList model.cardOptions.orderBy
 
-        cardFilterInput : CardScreenOptions -> Html.Html Msg
-        cardFilterInput options =
+        cardFilterInput : Html.Html Msg
+        cardFilterInput =
             div
                 [ class "card-filter" ]
-                [ input [ placeholder "Filter", value options.cardFilter, onInput CardFilterChange ] [] ]
+                [ input
+                    [ placeholder "Filter"
+                    , value model.cardOptions.filter
+                    , onInput CardFilterChange
+                    ]
+                    []
+                ]
     in
     case model.screen of
         Menu ->
@@ -181,38 +171,35 @@ buttonBar model =
         Cards ->
             div
                 [ class "button-bar" ]
-                [ homeButton
-                , cardOptionButton model.cardScreenOptions
-                , cardFilterInput model.cardScreenOptions
-                ]
+                [ homeButton, cardOptionButton, cardFilterInput ]
 
         _ ->
             div [ class "button-bar" ] [ homeButton ]
 
 
-viewCardOrderIcon : CardOrderBy -> Html.Html Msg
-viewCardOrderIcon orderBy =
+viewCardBarIcon : CardOrderBy -> Html.Html Msg
+viewCardBarIcon orderBy =
     div
-        [ class "card-order" ]
-        [ div [ class "icon", onClick (ShowCardOrderList orderBy) ] [ viewCardOrderImage orderBy ] ]
+        [ class "card-button" ]
+        [ div [ class "icon", onClick ShowCardBarList ] [ viewCardOrderImage orderBy ] ]
 
 
-viewCardOrderList : CardOrderBy -> Html.Html Msg
-viewCardOrderList current =
+viewCardBarList : CardOrderBy -> Html.Html Msg
+viewCardBarList currentCardOrderBy =
     let
         item : String -> CardOrderBy -> Html.Html Msg
-        item label orderBy =
+        item label cardOrderBy =
             div
                 [ classList
                     [ ( "item", True )
-                    , ( "current", orderBy == current )
+                    , ( "current", cardOrderBy == currentCardOrderBy )
                     ]
-                , onClick (ShowCardOrderIcon orderBy)
+                , onClick <| ShowCardBarIcon cardOrderBy
                 ]
-                [ viewCardOrderImage orderBy, text label ]
+                [ viewCardOrderImage cardOrderBy, text label ]
     in
     div
-        [ class "card-order" ]
+        [ class "card-button" ]
         [ div
             [ class "list" ]
             [ item "Name" CardOrderByAz
@@ -256,7 +243,7 @@ viewScreen model =
             viewLeaders leader
 
         Cards ->
-            viewCards model.cardScreenOptions
+            viewCards model.cardOptions
 
         Manuals ->
             viewManuals
@@ -421,16 +408,18 @@ tileList heading tiles =
         ]
 
 
-viewCards : CardScreenOptions -> Html.Html Msg
+viewCards : CardOptions -> Html.Html Msg
 viewCards options =
     div [ class "cards-container" ]
         [ viewCardList options
         ]
 
 
-viewCardList : CardScreenOptions -> Html.Html Msg
+viewCardList : CardOptions -> Html.Html Msg
 viewCardList options =
-    nothing
+    getCards options
+        |> List.map (.name >> text)
+        |> div []
 
 
 
@@ -453,10 +442,6 @@ update msg model =
         updateModel : (Model -> Model) -> ( Model, Cmd msg )
         updateModel fn =
             ( fn model, Cmd.none )
-
-        updateCardScreenOptions : (CardScreenOptions -> CardScreenOptions) -> ( Model, Cmd msg )
-        updateCardScreenOptions fn =
-            ( { model | cardScreenOptions = fn model.cardScreenOptions }, Cmd.none )
     in
     case msg of
         GotViewport viewPort ->
@@ -480,24 +465,37 @@ update msg model =
         Touch eventType eventData ->
             ( handleTouch eventType eventData model, Cmd.none )
 
-        ShowCardOrderIcon orderBy ->
-            updateCardScreenOptions (setCardOrder <| CardOrderIcon orderBy)
+        ShowCardBarIcon cardOrderBy ->
+            updateModel
+                (setCardBarView CardIcon
+                    >> updateCardOptions (setCardOrderBy cardOrderBy)
+                )
 
-        ShowCardOrderList orderBy ->
-            updateCardScreenOptions (setCardOrder <| CardOrderList orderBy)
+        ShowCardBarList ->
+            noUpdate
 
         CardFilterChange value ->
-            updateCardScreenOptions (setCardFilter value)
+            updateModel (updateCardOptions (setCardFilter value))
 
 
-setCardFilter : String -> CardScreenOptions -> CardScreenOptions
+updateCardOptions : (CardOptions -> CardOptions) -> Model -> Model
+updateCardOptions fn model =
+    { model | cardOptions = fn model.cardOptions }
+
+
+setCardBarView : CardBarView -> Model -> Model
+setCardBarView cardBarView model =
+    { model | cardBarView = cardBarView }
+
+
+setCardFilter : String -> CardOptions -> CardOptions
 setCardFilter value options =
-    { options | cardFilter = value }
+    { options | filter = value }
 
 
-setCardOrder : CardOrder -> CardScreenOptions -> CardScreenOptions
-setCardOrder order options =
-    { options | cardOrder = order }
+setCardOrderBy : CardOrderBy -> CardOptions -> CardOptions
+setCardOrderBy order options =
+    { options | orderBy = order }
 
 
 setZoomPosition : ( Float, Float ) -> Model -> Model

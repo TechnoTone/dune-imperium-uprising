@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "parcel index.html",
-    "clean": "del-cli dist/**",
+    "clean": "del-cli dist/** & del-cli .parcel-cache/**",
     "build": "npm run copy-static & parcel build index.html",
     "copy-static": "copyfiles -f -V \"static/**\" dist/"
   },

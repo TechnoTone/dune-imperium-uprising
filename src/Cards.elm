@@ -1,6 +1,6 @@
 module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, view)
 
-import Html exposing (Html, div)
+import Html exposing (Html, div, text)
 import Html.Attributes exposing (class, name)
 import List.Extra as List
 
@@ -70,12 +70,12 @@ type Grade
 fullCardList : List Card
 fullCardList =
     [ Card "Arrakis Revolt" "card-arrakisrevolt.jpg" 6 [ FremenFaction ] [ CityAccess ] GradeA
-    , Card "Bene Ges Operative" "card-benegesoperative.jpg" 3 [ BeneGesseritFaction ] [ BeneGesseritAccess ] GradeA
+    , Card "Bene Gessserit Operative" "card-benegesseritoperative.jpg" 3 [ BeneGesseritFaction ] [ BeneGesseritAccess ] GradeA
     , Card "Branching Path" "card-branchingpath.jpg" 3 [ BeneGesseritFaction ] [ BeneGesseritAccess, CityAccess ] GradeB
     , Card "Calculus of Power" "card-calculusofpower.jpg" 3 [ EmperorFaction ] [ CityAccess, SpyAccess ] GradeA
     , Card "Captured Mentat" "card-capturedmentat.jpg" 5 [] [ LandsraadAccess, SpiceTradeAccess ] GradeAm
     , Card "Cargo Runner " "card-cargorunner.jpg" 3 [ SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
-    , Card "Chani, clever tactician" "card-chani,clevertactician.jpg" 5 [ FremenFaction ] [ FremenAccess, LandsraadAccess, CityAccess ] GradeB
+    , Card "Chani, Clever Tactician" "card-chaniclevertactician.jpg" 5 [ FremenFaction ] [ FremenAccess, LandsraadAccess, CityAccess ] GradeB
     , Card "Corrinth City" "card-corrinthcity.jpg" 6 [ EmperorFaction ] [ EmperorAccess, SpiceTradeAccess ] GradeS
     , Card "Covert Operation" "card-covertoperation.jpg" 3 [] [ SpyAccess ] GradeB
     , Card "Dangerous Rhetoric" "card-dangerousrhetoric.jpg" 3 [] [ SpiceTradeAccess, SpyAccess ] GradeA
@@ -83,7 +83,7 @@ fullCardList =
     , Card "Desert Power" "card-desertpower.jpg" 6 [ FremenFaction ] [ LandsraadAccess ] GradeA
     , Card "Desert Survival" "card-desertsurvival.jpg" 2 [ FremenFaction ] [ LandsraadAccess ] GradeC
     , Card "Double Agent" "card-doubleagent.jpg" 3 [ EmperorFaction, SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
-    , Card "Eco Testing Station" "card-ecotestingstation.jpg" 3 [ FremenFaction ] [ FremenAccess, CityAccess ] GradeC
+    , Card "Ecological Testing Station" "card-ecologicaltestingstation.jpg" 3 [ FremenFaction ] [ FremenAccess, CityAccess ] GradeC
     , Card "Fedaykin Stilltent" "card-fedaykinstilltent.jpg" 2 [ FremenFaction ] [ LandsraadAccess ] GradeB
     , Card "Guild Envoy" "card-guildenvoy.jpg" 3 [ SpacingGuildFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeA
     , Card "Guild Spy" "card-guildspy.jpg" 3 [ SpacingGuildFaction ] [ SpyAccess ] GradeS
@@ -93,13 +93,13 @@ fullCardList =
     , Card "Interstellar Trade" "card-interstellartrade.jpg" 7 [ SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeS
     , Card "Junction Headquarters" "card-junctionheadquarters.jpg" 6 [ SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
     , Card "Leadership" "card-leadership.jpg" 5 [ FremenFaction ] [ FremenAccess, LandsraadAccess ] GradeA
-    , Card "Long live the fighters" "card-longlivethefighters.jpg" 7 [ FremenFaction ] [ FremenAccess, CityAccess ] GradeAp
+    , Card "Long Live The Fighters" "card-longlivethefighters.jpg" 7 [ FremenFaction ] [ FremenAccess, CityAccess ] GradeAp
     , Card "Maker Keeper" "card-makerkeeper.jpg" 2 [ BeneGesseritFaction, FremenFaction ] [ CityAccess ] GradeB
     , Card "Maula Pistol" "card-maulapistol.jpg" 3 [ FremenFaction ] [ LandsraadAccess, CityAccess ] GradeD
     , Card "Northern Watermaster" "card-northernwatermaster.jpg" 3 [ FremenFaction ] [ CityAccess ] GradeB
     , Card "Overthrow" "card-overthrow.jpg" 8 [] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeSpp
     , Card "Paracompass" "card-paracompass.jpg" 4 [] [ CityAccess ] GradeC
-    , Card "Price is no Object" "card-priceisnoobject.jpg" 6 [ EmperorFaction, BeneGesseritFaction ] [ EmperorAccess, BeneGesseritAccess ] GradeAp
+    , Card "Price Is No Object" "card-priceisnoobject.jpg" 6 [ EmperorFaction, BeneGesseritFaction ] [ EmperorAccess, BeneGesseritAccess ] GradeAp
     , Card "Priority Contracts" "card-prioritycontracts.jpg" 6 [ SpacingGuildFaction ] [ LandsraadAccess, SpiceTradeAccess ] GradeB
     , Card "Public Spectacle" "card-publicspectacle.jpg" 4 [ EmperorFaction ] [ SpyAccess ] GradeS
     , Card "Rebel Supplier" "card-rebelsupplier.jpg" 3 [ FremenFaction ] [ CityAccess ] GradeC
@@ -110,21 +110,21 @@ fullCardList =
     , Card "Smuggler’s Haven" "card-smugglershaven.jpg" 4 [ SpacingGuildFaction ] [ SpacingGuildAccess, LandsraadAccess ] GradeS
     , Card "Smuggler’s Harvester" "card-smugglersharvester.jpg" 1 [ SpacingGuildFaction ] [ LandsraadAccess ] GradeC
     , Card "Southern Elders" "card-southernelders.jpg" 4 [ BeneGesseritFaction, FremenFaction ] [ BeneGesseritAccess, FremenAccess ] GradeA
-    , Card "Spacetime folding" "card-spacetimefolding.jpg" 1 [ SpacingGuildFaction ] [ SpacingGuildAccess ] GradeB
+    , Card "Spacetime Folding" "card-spacetimefolding.jpg" 1 [ SpacingGuildFaction ] [ SpacingGuildAccess ] GradeB
     , Card "Spacing Guild’s Favour" "card-spacingguildsfavour.jpg" 5 [ SpacingGuildFaction ] [ SpacingGuildAccess, LandsraadAccess ] GradeA
     , Card "Spy Network" "card-spynetwork.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [] GradeB
     , Card "Steersman" "card-steersman.jpg" 8 [ SpacingGuildFaction ] [ SpacingGuildAccess, LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeS
-    , Card "Stilgar, the devoted" "card-stilgar,thedevoted.jpg" 6 [ FremenFaction ] [ FremenAccess, LandsraadAccess, CityAccess ] GradeS
+    , Card "Stilgar, The Devoted" "card-stilgarthedevoted.jpg" 6 [ FremenFaction ] [ FremenAccess, LandsraadAccess, CityAccess ] GradeS
     , Card "Strike Fleet" "card-strikefleet.jpg" 5 [] [ SpyAccess ] GradeS
     , Card "Subversive Advisor" "card-subversiveadvisor.jpg" 5 [] [ SpyAccess ] GradeB
     , Card "Thumper" "card-thumper.jpg" 3 [ FremenFaction ] [ LandsraadAccess ] GradeD
     , Card "Treacherous Manoever" "card-treacherousmanoever.jpg" 5 [ EmperorFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeB
     , Card "Tread in Darkness" "card-treadindarkness.jpg" 4 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
-    , Card "TruthTrance" "card-truthtrance.jpg" 4 [ BeneGesseritFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeB
+    , Card "Truthtrance" "card-truthtrance.jpg" 4 [ BeneGesseritFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeB
     , Card "Undercover Agent" "card-undercoveragent.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeA
     , Card "Unswerving Loyalty" "card-unswervingloyalty.jpg" 1 [ FremenFaction ] [] GradeD
     , Card "Weirding Woman" "card-weirdingwoman.jpg" 1 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess ] GradeF
-    , Card "Wheels in Wheels" "card-wheelsinwheels.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [ SpyAccess ] GradeB
+    , Card "Wheels Within Wheels" "card-wheelswithinwheels.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [ SpyAccess ] GradeB
     ]
 
 
@@ -244,7 +244,26 @@ groupedBy orderBy cardList =
 
 
 view : CardsGroup -> Html msg
-view cardGroup =
-    div []
-        [ Debug.toString cardGroup |> Html.text
-        ]
+view cardsGroup =
+    case cardsGroup of
+        GroupedByAz groups ->
+            groups
+                |> List.map
+                    (\( letter, cards ) ->
+                        div
+                            [ class "card-group" ]
+                            [ div
+                                [ class "group-header" ]
+                                [ div
+                                    [ class "group-header-letter" ]
+                                    [ text letter ]
+                                ]
+                            , div
+                                [ class "group-cards" ]
+                                [ Debug.toString cards |> text ]
+                            ]
+                    )
+                |> div []
+
+        _ ->
+            div [] [ text "Under Construction" ]

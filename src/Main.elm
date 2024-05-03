@@ -201,6 +201,11 @@ viewCardBarList currentCardOrderBy =
     div
         [ class "card-button" ]
         [ div
+            [ class "list-background"
+            , onClick <| ShowCardBarIcon currentCardOrderBy
+            ]
+            []
+        , div
             [ class "list" ]
             [ item "Name" CardOrderByAz
             , item "Persuasion Cost" CardOrderByPersuasionCost
@@ -472,7 +477,7 @@ update msg model =
                 )
 
         ShowCardBarList ->
-            noUpdate
+            updateModel (setCardBarView CardList)
 
         CardFilterChange value ->
             updateModel (updateCardOptions (setCardFilter value))

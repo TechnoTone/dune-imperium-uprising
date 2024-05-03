@@ -143,8 +143,8 @@ buttonBar model =
                 [ class "home-button", onClick <| Show Menu ]
                 [ img [ src "home.png" ] [] ]
 
-        cardOptionButton : Html.Html Msg
-        cardOptionButton =
+        cardBarButton : Html.Html Msg
+        cardBarButton =
             case model.cardBarView of
                 CardIcon ->
                     viewCardBarIcon model.cardOptions.orderBy
@@ -171,7 +171,7 @@ buttonBar model =
         Cards ->
             div
                 [ class "button-bar" ]
-                [ homeButton, cardOptionButton, cardFilterInput ]
+                [ homeButton, cardBarButton, cardFilterInput ]
 
         _ ->
             div [ class "button-bar" ] [ homeButton ]
@@ -201,6 +201,10 @@ viewCardBarList currentCardOrderBy =
     div
         [ class "card-button" ]
         [ div
+            [ class "icon" ]
+            [ viewCardOrderImage currentCardOrderBy
+            ]
+        , div
             [ class "list-background"
             , onClick <| ShowCardBarIcon currentCardOrderBy
             ]

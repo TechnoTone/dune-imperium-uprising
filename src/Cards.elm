@@ -1,12 +1,16 @@
-module Cards exposing (Card, CardOptions, CardOrderBy(..), getCards)
+module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, view)
+
+import Html exposing (Html, div)
+import Html.Attributes exposing (class, name)
+import List.Extra as List
 
 
 type CardOrderBy
     = CardOrderByAz
     | CardOrderByPersuasionCost
-    | CardOrderByAgentAccess
     | CardOrderByFactionSynergy
-    | CardOrderByTier
+    | CardOrderByAgentAccess
+    | CardOrderByGrade
 
 
 type alias CardOptions =
@@ -23,6 +27,14 @@ type alias Card =
     , agentAccess : List AgentAccess
     , grade : Grade
     }
+
+
+type CardsGroup
+    = GroupedByAz (List ( String, List Card ))
+    | GroupedByPersuasionCost (List ( Int, List Card ))
+    | GroupedByFactionSynergy (List ( Faction, List Card ))
+    | GroupedByAgentAccess (List ( AgentAccess, List Card ))
+    | GroupedByGrade (List ( Grade, List Card ))
 
 
 type Faction
@@ -55,26 +67,8 @@ type Grade
     | GradeF
 
 
-getCards : CardOptions -> List Card
-getCards { filter } =
-    let
-        filteredCards =
-            List.filter (cardNameContains filter) cards
-    in
-    filteredCards
-
-
-cardNameContains : String -> Card -> Bool
-cardNameContains filter card =
-    if String.trim filter == "" then
-        True
-
-    else
-        String.contains (String.toLower filter) (String.toLower card.name)
-
-
-cards : List Card
-cards =
+fullCardList : List Card
+fullCardList =
     [ Card "Arrakis Revolt" "card-arrakisrevolt.jpg" 6 [ FremenFaction ] [ CityAccess ] GradeA
     , Card "Bene Ges Operative" "card-benegesoperative.jpg" 3 [ BeneGesseritFaction ] [ BeneGesseritAccess ] GradeA
     , Card "Branching Path" "card-branchingpath.jpg" 3 [ BeneGesseritFaction ] [ BeneGesseritAccess, CityAccess ] GradeB
@@ -132,3 +126,125 @@ cards =
     , Card "Weirding Woman" "card-weirdingwoman.jpg" 1 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess ] GradeF
     , Card "Wheels in Wheels" "card-wheelsinwheels.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [ SpyAccess ] GradeB
     ]
+
+
+get : CardOptions -> CardsGroup
+get { orderBy, filter } =
+    fullCardList
+        |> List.filter (cardNameContains filter)
+        |> groupedBy orderBy
+
+
+cardNameContains : String -> Card -> Bool
+cardNameContains filter card =
+    if String.trim filter == "" then
+        True
+
+    else
+        String.contains (String.toLower filter) (String.toLower card.name)
+
+
+groupedBy : CardOrderBy -> List Card -> CardsGroup
+groupedBy orderBy cardList =
+    case orderBy of
+        CardOrderByAz ->
+            let
+                cardNameFirstLetter : Card -> String
+                cardNameFirstLetter { name } =
+                    String.left 1 name |> String.toUpper
+            in
+            GroupedByAz
+                (cardList
+                    |> List.map cardNameFirstLetter
+                    |> List.unique
+                    |> List.sort
+                    |> List.map
+                        (\l ->
+                            ( l
+                            , cardList
+                                |> List.filter (cardNameFirstLetter >> (==) l)
+                            )
+                        )
+                )
+
+        CardOrderByPersuasionCost ->
+            GroupedByPersuasionCost
+                (cardList
+                    |> List.map .persuasionCost
+                    |> List.unique
+                    |> List.sort
+                    |> List.map
+                        (\p ->
+                            ( p
+                            , cardList
+                                |> List.filter (.persuasionCost >> (==) p)
+                            )
+                        )
+                )
+
+        CardOrderByFactionSynergy ->
+            GroupedByFactionSynergy
+                ([ EmperorFaction
+                 , SpacingGuildFaction
+                 , BeneGesseritFaction
+                 , FremenFaction
+                 ]
+                    |> List.map
+                        (\f ->
+                            ( f
+                            , cardList
+                                |> List.filter (.factionSynergy >> List.member f)
+                            )
+                        )
+                    |> List.filter (Tuple.second >> List.isEmpty >> not)
+                )
+
+        CardOrderByAgentAccess ->
+            GroupedByAgentAccess
+                ([ EmperorAccess
+                 , SpacingGuildAccess
+                 , BeneGesseritAccess
+                 , FremenAccess
+                 , LandsraadAccess
+                 , CityAccess
+                 , SpiceTradeAccess
+                 , SpyAccess
+                 ]
+                    |> List.map
+                        (\a ->
+                            ( a
+                            , cardList
+                                |> List.filter (.agentAccess >> List.member a)
+                            )
+                        )
+                    |> List.filter (Tuple.second >> List.isEmpty >> not)
+                )
+
+        CardOrderByGrade ->
+            GroupedByGrade
+                ([ GradeSpp
+                 , GradeS
+                 , GradeAp
+                 , GradeA
+                 , GradeAm
+                 , GradeB
+                 , GradeC
+                 , GradeD
+                 , GradeF
+                 ]
+                    |> List.map
+                        (\g ->
+                            ( g
+                            , cardList
+                                |> List.filter (.grade >> (==) g)
+                            )
+                        )
+                    |> List.filter (Tuple.second >> List.isEmpty >> not)
+                )
+
+
+view : CardsGroup -> Html msg
+view cardGroup =
+    div []
+        [ Debug.toString cardGroup |> Html.text
+        ]

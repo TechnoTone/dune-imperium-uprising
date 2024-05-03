@@ -3,7 +3,7 @@ module Main exposing (Model, Msg(..), initModel, main, subscriptions, update, vi
 import Browser
 import Browser.Dom as Dom
 import Browser.Events as Browser
-import Cards exposing (CardOptions, CardOrderBy(..), getCards)
+import Cards exposing (CardOptions, CardOrderBy(..))
 import Html exposing (Attribute, a, button, div, h1, h3, img, input, span, text)
 import Html.Attributes exposing (class, classList, href, id, placeholder, src, style, value)
 import Html.Events exposing (onClick, onInput)
@@ -215,7 +215,7 @@ viewCardBarList currentCardOrderBy =
             , item "Persuasion Cost" CardOrderByPersuasionCost
             , item "Agent Access" CardOrderByAgentAccess
             , item "Faction Synergy" CardOrderByFactionSynergy
-            , item "Tier" CardOrderByTier
+            , item "Grade" CardOrderByGrade
             ]
         ]
 
@@ -235,8 +235,8 @@ viewCardOrderImage order =
         CardOrderByFactionSynergy ->
             img [ src "faction-icon.png" ] []
 
-        CardOrderByTier ->
-            img [ src "tier-icon.png" ] []
+        CardOrderByGrade ->
+            img [ src "grade-icon.png" ] []
 
 
 viewScreen : Model -> Html.Html Msg
@@ -426,9 +426,9 @@ viewCards options =
 
 viewCardList : CardOptions -> Html.Html Msg
 viewCardList options =
-    getCards options
-        |> List.map (.name >> text)
-        |> div []
+    options
+        |> Cards.get
+        |> Cards.view
 
 
 

@@ -66,6 +66,7 @@ type Grade
     | GradeAp
     | GradeSpp
     | GradeF
+    | GradeU
 
 
 fullCardList : List Card
@@ -118,6 +119,7 @@ fullCardList =
     , Card "Stilgar, The Devoted" "card-stilgarthedevoted.jpg" 6 [ FremenFaction ] [ FremenAccess, LandsraadAccess, CityAccess ] GradeS
     , Card "Strike Fleet" "card-strikefleet.jpg" 5 [] [ SpyAccess ] GradeS
     , Card "Subversive Advisor" "card-subversiveadvisor.jpg" 5 [] [ SpyAccess ] GradeB
+    , Card "The Spice Must Flow" "card-thespicemustflow.jpg" 9 [ SpacingGuildFaction ] [] GradeU
     , Card "Thumper" "card-thumper.jpg" 3 [ FremenFaction ] [ LandsraadAccess ] GradeD
     , Card "Treacherous Maneuver" "card-treacherousmaneuver.jpg" 5 [ EmperorFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeB
     , Card "Tread in Darkness" "card-treadindarkness.jpg" 4 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
@@ -246,28 +248,25 @@ groupedBy orderBy cardList =
 
 view : CardsGroup -> List (Html msg)
 view cardsGroup =
+    let
+        groupsFn : (a -> Html msg) -> List ( a, List Card ) -> List (Html msg)
+        groupsFn iconFn groupsList =
+            groupsList
+                |> List.concatMap
+                    (\( groupId, cards ) ->
+                        [ div
+                            [ class "group-header" ]
+                            [ iconFn groupId ]
+                        , viewCards cards
+                        ]
+                    )
+    in
     case cardsGroup of
         GroupedByAz groups ->
-            groups
-                |> List.concatMap
-                    (\( letter, cards ) ->
-                        [ div
-                            [ class "group-header" ]
-                            [ letterIcon letter ]
-                        , viewCards cards
-                        ]
-                    )
+            groupsFn letterIcon groups
 
         GroupedByPersuasionCost groups ->
-            groups
-                |> List.concatMap
-                    (\( persuasion, cards ) ->
-                        [ div
-                            [ class "group-header" ]
-                            [ persuasionIcon persuasion ]
-                        , viewCards cards
-                        ]
-                    )
+            groupsFn persuasionIcon groups
 
         _ ->
             [ text "Under Construction" ]

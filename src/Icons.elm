@@ -7,7 +7,7 @@ import Html.Attributes exposing (class, src)
 letterIcon : String -> Html msg
 letterIcon letter =
     div
-        [ class "letter-icon" ]
+        [ class "group-icon" ]
         [ img [ src "letter-icon.png" ] []
         , div [ class "label" ] [ text letter ]
         ]
@@ -16,7 +16,7 @@ letterIcon letter =
 persuasionIcon : Int -> Html msg
 persuasionIcon persuasion =
     div
-        [ class "persuasion-icon" ]
+        [ class "group-icon persuasion-icon" ]
         [ img [ src "persuasion-icon.png" ] []
         , div [ class "label" ] [ text (String.fromInt persuasion) ]
         ]

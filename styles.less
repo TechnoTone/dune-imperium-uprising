@@ -101,10 +101,10 @@ body {
     .card-button {
       display: flex;
 
-      .icon {
+      .card-button-icon {
         display: flex;
 
-        >.letter-icon {
+        >.group-icon {
           padding-top: 1vmin;
         }
       }
@@ -133,7 +133,7 @@ body {
           padding: 2vmin;
           cursor: pointer;
 
-          .icon {
+          .card-button-icon {
             display: flex;
             height: 8vmin;
           }
@@ -155,7 +155,7 @@ body {
         margin-right: 1vmin;
       }
 
-      .letter-icon {
+      .group-icon {
         display: flex;
         flex-direction: column;
         justify-items: center;
@@ -294,7 +294,7 @@ body {
       .group-header {
         grid-column: 1;
         display: flex;
-        width: 8vmin;
+        width: 4vmin;
         justify-content: center;
       }
 
@@ -327,20 +327,24 @@ body {
   }
 }
 
-.letter-icon {
+.group-icon {
   display: flex;
   flex-direction: column;
   justify-items: center;
   text-align: center;
 
   img {
-    width: 3vmin;
-    height: 3vmin;
+    width: 4vmin;
+    height: 4vmin;
   }
 
   .label {
-    transform: translateY(-2.4vmin);
+    transform: translateY(-3vmin);
     font-size: 2vmin;
   }
 
+}
+
+.persuasion-icon {
+  color: white;
 }

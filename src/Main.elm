@@ -211,7 +211,7 @@ viewCardBarIcon : CardOrderBy -> Html.Html Msg
 viewCardBarIcon orderBy =
     div
         [ class "card-button" ]
-        [ div [ class "icon", onClick ShowCardBarList ] [ viewCardOrderImage orderBy ] ]
+        [ div [ class "card-button-icon", onClick ShowCardBarList ] [ viewCardOrderImage orderBy ] ]
 
 
 viewCardBarList : CardOrderBy -> Html.Html Msg
@@ -231,7 +231,7 @@ viewCardBarList currentCardOrderBy =
     div
         [ class "card-button" ]
         [ div
-            [ class "icon" ]
+            [ class "card-button-icon" ]
             [ viewCardOrderImage currentCardOrderBy
             ]
         , div

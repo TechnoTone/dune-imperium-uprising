@@ -1,7 +1,8 @@
-module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, letterIcon, view)
+module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, view)
 
 import Html exposing (Html, div, img, text)
 import Html.Attributes exposing (class, name, src)
+import Icons exposing (letterIcon, persuasionIcon)
 import List.Extra as List
 
 
@@ -257,6 +258,17 @@ view cardsGroup =
                         ]
                     )
 
+        GroupedByPersuasionCost groups ->
+            groups
+                |> List.concatMap
+                    (\( persuasion, cards ) ->
+                        [ div
+                            [ class "group-header" ]
+                            [ persuasionIcon persuasion ]
+                        , viewCards cards
+                        ]
+                    )
+
         _ ->
             [ text "Under Construction" ]
 
@@ -272,12 +284,3 @@ viewCards cards =
                     img [ class "card", src c ] []
                 )
         )
-
-
-letterIcon : String -> Html msg
-letterIcon content =
-    div
-        [ class "letter-icon" ]
-        [ img [ src "empty-letter-icon.png" ] []
-        , div [ class "label" ] [ text content ]
-        ]

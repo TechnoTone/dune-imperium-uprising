@@ -9,6 +9,7 @@ import Html.Attributes exposing (class, classList, href, id, placeholder, src, s
 import Html.Events exposing (onClick, onInput)
 import Html.Events.Extra.Mouse as Mouse
 import Html.Events.Extra.Touch as Touch exposing (Touch)
+import Icons exposing (letterIcon)
 import Task
 
 
@@ -224,8 +225,7 @@ viewCardOrderImage : CardOrderBy -> Html.Html Msg
 viewCardOrderImage order =
     case order of
         CardOrderByAz ->
-            -- img [ src "empty-letter-icon.png" ] []
-            Cards.letterIcon "A-Z"
+            letterIcon "A-Z"
 
         CardOrderByPersuasionCost ->
             img [ src "persuasion-icon.png" ] []
@@ -237,7 +237,7 @@ viewCardOrderImage order =
             img [ src "faction-icon.png" ] []
 
         CardOrderByGrade ->
-            img [ src "empty-grade-icon.png" ] []
+            img [ src "grade-icon.png" ] []
 
 
 viewScreen : Model -> Html.Html Msg

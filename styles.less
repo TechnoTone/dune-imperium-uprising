@@ -83,7 +83,10 @@ body {
 
       .icon {
         display: flex;
-        height: 8vmin;
+
+        >.letter-icon {
+          padding-top: 1vmin;
+        }
       }
 
       .list-background {
@@ -129,6 +132,7 @@ body {
         cursor: pointer;
         width: 6vmin;
         object-fit: contain;
+        margin-right: 1vmin;
       }
 
       .letter-icon {
@@ -136,15 +140,19 @@ body {
         flex-direction: column;
         justify-items: center;
         text-align: center;
+        cursor: pointer;
+        width: 6vmin;
+        height: 6vmin;
+        margin-right: 1vmin;
 
         img {
-          width: 8vmin;
-          height: 8vmin;
+          width: 6vmin;
+          height: 6vmin;
         }
 
         .label {
-          transform: translateY(-6.2vmin);
-          font-size: 4vmin;
+          transform: translateY(-4.7vmin);
+          font-size: 3vmin;
         }
 
       }

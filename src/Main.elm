@@ -224,7 +224,8 @@ viewCardOrderImage : CardOrderBy -> Html.Html Msg
 viewCardOrderImage order =
     case order of
         CardOrderByAz ->
-            img [ src "empty-letter-icon.png" ] []
+            -- img [ src "empty-letter-icon.png" ] []
+            Cards.letterIcon "A-Z"
 
         CardOrderByPersuasionCost ->
             img [ src "persuasion-icon.png" ] []

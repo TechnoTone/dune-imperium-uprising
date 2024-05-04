@@ -129,7 +129,24 @@ body {
         cursor: pointer;
         width: 6vmin;
         object-fit: contain;
-        margin-right: 2vmin;
+      }
+
+      .letter-icon {
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        text-align: center;
+
+        img {
+          width: 8vmin;
+          height: 8vmin;
+        }
+
+        .label {
+          transform: translateY(-6.2vmin);
+          font-size: 4vmin;
+        }
+
       }
     }
 
@@ -259,6 +276,7 @@ body {
     position: fixed;
 
     .cards-body {
+      grid-template-columns: fit-content(1ch) 1fr;
       display: grid;
       gap: 1vmin;
       padding: 1vmin;
@@ -268,15 +286,20 @@ body {
         display: flex;
         width: 8vmin;
         justify-content: center;
-
-
-        .group-header-letter {}
       }
 
       .group-cards {
         grid-column: 2;
         display: flex;
         flex-direction: row;
+        gap: 1vmin;
+        place-items: left;
+
+        .card {
+          max-width: 70vw;
+          max-height: 40vh;
+          border-radius: 2vmin;
+        }
       }
     }
   }
@@ -296,18 +319,18 @@ body {
 
 .letter-icon {
   display: flex;
-  height: 3vmin;
-  align-items: center;
-  transform: translateX(-50%);
+  flex-direction: column;
+  justify-items: center;
+  text-align: center;
 
   img {
     width: 3vmin;
     height: 3vmin;
-    transform: translateX(-30%);
   }
 
-  * {
-    position: absolute;
-    // transform: translateX(-50%)
+  .label {
+    transform: translateY(-2.4vmin);
+    font-size: 2vmin;
   }
+
 }

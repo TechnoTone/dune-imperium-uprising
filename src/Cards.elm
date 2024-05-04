@@ -1,4 +1,4 @@
-module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, view)
+module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, letterIcon, view)
 
 import Html exposing (Html, div, img, text)
 import Html.Attributes exposing (class, name, src)
@@ -111,17 +111,17 @@ fullCardList =
     , Card "Smuggler’s Harvester" "card-smugglersharvester.jpg" 1 [ SpacingGuildFaction ] [ LandsraadAccess ] GradeC
     , Card "Southern Elders" "card-southernelders.jpg" 4 [ BeneGesseritFaction, FremenFaction ] [ BeneGesseritAccess, FremenAccess ] GradeA
     , Card "Spacetime Folding" "card-spacetimefolding.jpg" 1 [ SpacingGuildFaction ] [ SpacingGuildAccess ] GradeB
-    , Card "Spacing Guild’s Favour" "card-spacingguildsfavour.jpg" 5 [ SpacingGuildFaction ] [ SpacingGuildAccess, LandsraadAccess ] GradeA
+    , Card "Spacing Guild’s Favor" "card-spacingguildsfavor.jpg" 5 [ SpacingGuildFaction ] [ SpacingGuildAccess, LandsraadAccess ] GradeA
     , Card "Spy Network" "card-spynetwork.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [] GradeB
     , Card "Steersman" "card-steersman.jpg" 8 [ SpacingGuildFaction ] [ SpacingGuildAccess, LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeS
     , Card "Stilgar, The Devoted" "card-stilgarthedevoted.jpg" 6 [ FremenFaction ] [ FremenAccess, LandsraadAccess, CityAccess ] GradeS
     , Card "Strike Fleet" "card-strikefleet.jpg" 5 [] [ SpyAccess ] GradeS
     , Card "Subversive Advisor" "card-subversiveadvisor.jpg" 5 [] [ SpyAccess ] GradeB
     , Card "Thumper" "card-thumper.jpg" 3 [ FremenFaction ] [ LandsraadAccess ] GradeD
-    , Card "Treacherous Manoever" "card-treacherousmanoever.jpg" 5 [ EmperorFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeB
+    , Card "Treacherous Maneuver" "card-treacherousmaneuver.jpg" 5 [ EmperorFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeB
     , Card "Tread in Darkness" "card-treadindarkness.jpg" 4 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
     , Card "Truthtrance" "card-truthtrance.jpg" 4 [ BeneGesseritFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeB
-    , Card "Undercover Agent" "card-undercoveragent.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeA
+    , Card "Undercover Asset" "card-undercoverasset.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeA
     , Card "Unswerving Loyalty" "card-unswervingloyalty.jpg" 1 [ FremenFaction ] [] GradeD
     , Card "Weirding Woman" "card-weirdingwoman.jpg" 1 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess ] GradeF
     , Card "Wheels Within Wheels" "card-wheelswithinwheels.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [ SpyAccess ] GradeB
@@ -253,9 +253,7 @@ view cardsGroup =
                         [ div
                             [ class "group-header" ]
                             [ letterIcon letter ]
-                        , div
-                            [ class "group-cards" ]
-                            [ Debug.toString cards |> text ]
+                        , viewCards cards
                         ]
                     )
 
@@ -263,10 +261,23 @@ view cardsGroup =
             [ text "Under Construction" ]
 
 
+viewCards : List Card -> Html msg
+viewCards cards =
+    div
+        [ class "group-cards" ]
+        (cards
+            |> List.map .imageName
+            |> List.map
+                (\c ->
+                    img [ class "card", src c ] []
+                )
+        )
+
+
 letterIcon : String -> Html msg
 letterIcon content =
     div
         [ class "letter-icon" ]
         [ img [ src "empty-letter-icon.png" ] []
-        , text content
+        , div [ class "label" ] [ text content ]
         ]

@@ -169,6 +169,25 @@ buttonBar model =
         Menu ->
             nothing
 
+        Leaders _ ->
+            div
+                [ class "button-bar" ]
+                [ homeButton
+                , div
+                    [ class "leader-avatars" ]
+                    [ leaderAvatar ( "avatar-mauddib.jpg", MaudDib )
+                    , leaderAvatar ( "avatar-gurneyhalleck.jpg", GurneyHalleck )
+                    , leaderAvatar ( "avatar-feydrauthaharkonnen.jpg", FeydRauthaHarkonnen )
+                    , leaderAvatar ( "avatar-ladymargotfenring.jpg", LadyMargotFenring )
+                    , leaderAvatar ( "avatar-ladyambermetulli.jpg", LadyAmberMetulli )
+                    , leaderAvatar ( "avatar-princessirulan.jpg", PrincessIrulan )
+                    , leaderAvatar ( "avatar-ladyjessica.jpg", LadyJessica )
+                    , leaderAvatar ( "avatar-reverendmotherjessica.jpg", ReverendMotherJessica )
+                    , leaderAvatar ( "avatar-shaddamconringiv.jpg", ShaddamConringIV )
+                    , leaderAvatar ( "avatar-stabantuer.jpg", StabanTuer )
+                    ]
+                ]
+
         Cards ->
             div
                 [ class "button-bar" ]
@@ -176,6 +195,16 @@ buttonBar model =
 
         _ ->
             div [ class "button-bar" ] [ homeButton ]
+
+
+leaderAvatar : ( String, Leader ) -> Html.Html Msg
+leaderAvatar ( imageSource, leader ) =
+    div
+        [ class "leader-avatar" ]
+        [ a
+            [ onClick <| Show (Leaders leader) ]
+            [ img [ src imageSource ] [] ]
+        ]
 
 
 viewCardBarIcon : CardOrderBy -> Html.Html Msg
@@ -274,31 +303,8 @@ viewMenu =
 
 viewLeaders : Leader -> Html.Html Msg
 viewLeaders currentLeader =
-    let
-        avatar : ( String, Leader ) -> Html.Html Msg
-        avatar ( imageSource, leader ) =
-            div
-                [ class "avatar" ]
-                [ a
-                    [ onClick <| Show (Leaders leader) ]
-                    [ img [ src imageSource ] [] ]
-                ]
-    in
     div [ class "leaders" ]
         [ div
-            [ class "avatars" ]
-            [ avatar ( "avatar-mauddib.jpg", MaudDib )
-            , avatar ( "avatar-gurneyhalleck.jpg", GurneyHalleck )
-            , avatar ( "avatar-feydrauthaharkonnen.jpg", FeydRauthaHarkonnen )
-            , avatar ( "avatar-ladymargotfenring.jpg", LadyMargotFenring )
-            , avatar ( "avatar-ladyambermetulli.jpg", LadyAmberMetulli )
-            , avatar ( "avatar-princessirulan.jpg", PrincessIrulan )
-            , avatar ( "avatar-ladyjessica.jpg", LadyJessica )
-            , avatar ( "avatar-reverendmotherjessica.jpg", ReverendMotherJessica )
-            , avatar ( "avatar-shaddamconringiv.jpg", ShaddamConringIV )
-            , avatar ( "avatar-stabantuer.jpg", StabanTuer )
-            ]
-        , div
             [ class "leader" ]
             [ img
                 [ src

@@ -243,27 +243,24 @@ groupedBy orderBy cardList =
                 )
 
 
-view : CardsGroup -> Html msg
+view : CardsGroup -> List (Html msg)
 view cardsGroup =
     case cardsGroup of
         GroupedByAz groups ->
             groups
-                |> List.map
+                |> List.concatMap
                     (\( letter, cards ) ->
-                        div
-                            [ class "card-group" ]
+                        [ div
+                            [ class "group-header" ]
                             [ div
-                                [ class "group-header" ]
-                                [ div
-                                    [ class "group-header-letter" ]
-                                    [ text letter ]
-                                ]
-                            , div
-                                [ class "group-cards" ]
-                                [ Debug.toString cards |> text ]
+                                [ class "group-header-letter" ]
+                                [ text letter ]
                             ]
+                        , div
+                            [ class "group-cards" ]
+                            [ Debug.toString cards |> text ]
+                        ]
                     )
-                |> div []
 
         _ ->
-            div [] [ text "Under Construction" ]
+            [ text "Under Construction" ]

@@ -194,8 +194,7 @@ body {
       transform: scale(2);
     }
 
-    &.zoomed-out {
-    }
+    &.zoomed-out {}
   }
 
   .leaders {
@@ -240,23 +239,24 @@ body {
   }
 
   .cards-container {
-    display: flex;
+    display: grid;
     margin-top: 9vmin;
-    flex-direction: column;
     gap: 1vmin;
+    background-color: @orange4;
+    ;
 
-    .card-group {
+    .group-header {
+      grid-column: 1;
+      display: flex;
+      width: 8vmin;
+      align-content: center;
+      justify-content: center;
+    }
+
+    .group-cards {
+      grid-column: 2;
       display: flex;
       flex-direction: row;
-      gap: 1vmin;
-      width: 100%;
-
-      .group-header {
-        display: flex;
-        width: 8vmin;
-        align-content: center;
-        justify-content: center;
-      }
     }
   }
 

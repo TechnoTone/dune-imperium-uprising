@@ -419,12 +419,13 @@ tileList heading tiles =
 
 viewCards : CardOptions -> Html.Html Msg
 viewCards options =
-    div [ class "cards-container" ]
-        [ viewCardList options
+    div []
+        [ div [ class "cards-container" ]
+            (viewCardList options)
         ]
 
 
-viewCardList : CardOptions -> Html.Html Msg
+viewCardList : CardOptions -> List (Html.Html Msg)
 viewCardList options =
     options
         |> Cards.get

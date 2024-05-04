@@ -224,7 +224,7 @@ viewCardOrderImage : CardOrderBy -> Html.Html Msg
 viewCardOrderImage order =
     case order of
         CardOrderByAz ->
-            img [ src "az-icon.png" ] []
+            img [ src "empty-letter-icon.png" ] []
 
         CardOrderByPersuasionCost ->
             img [ src "persuasion-icon.png" ] []
@@ -236,7 +236,7 @@ viewCardOrderImage order =
             img [ src "faction-icon.png" ] []
 
         CardOrderByGrade ->
-            img [ src "grade-icon.png" ] []
+            img [ src "empty-grade-icon.png" ] []
 
 
 viewScreen : Model -> Html.Html Msg
@@ -419,8 +419,9 @@ tileList heading tiles =
 
 viewCards : CardOptions -> Html.Html Msg
 viewCards options =
-    div []
-        [ div [ class "cards-container" ]
+    div [ class "cards-container" ]
+        [ div
+            [ class "cards-body" ]
             (viewCardList options)
         ]
 

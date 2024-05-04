@@ -1,7 +1,7 @@
 module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, view)
 
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (class, name)
+import Html exposing (Html, div, img, text)
+import Html.Attributes exposing (class, name, src)
 import List.Extra as List
 
 
@@ -252,10 +252,7 @@ view cardsGroup =
                     (\( letter, cards ) ->
                         [ div
                             [ class "group-header" ]
-                            [ div
-                                [ class "group-header-letter" ]
-                                [ text letter ]
-                            ]
+                            [ letterIcon letter ]
                         , div
                             [ class "group-cards" ]
                             [ Debug.toString cards |> text ]
@@ -264,3 +261,12 @@ view cardsGroup =
 
         _ ->
             [ text "Under Construction" ]
+
+
+letterIcon : String -> Html msg
+letterIcon content =
+    div
+        [ class "letter-icon" ]
+        [ img [ src "empty-letter-icon.png" ] []
+        , text content
+        ]

@@ -14,6 +14,18 @@ body {
   right: 0;
   bottom: 0;
 
+  ::-webkit-scrollbar {
+    width: 1vmin;
+  }
+
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px @orange2;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: @orange1;
+  }
+
   a:link {
     color: @orange1;
     text-decoration: none;
@@ -239,24 +251,33 @@ body {
   }
 
   .cards-container {
-    display: grid;
     margin-top: 9vmin;
-    gap: 1vmin;
     background-color: @orange4;
-    ;
+    width: 100%;
+    height: 100%-7vmin;
+    overflow: scroll;
+    position: fixed;
 
-    .group-header {
-      grid-column: 1;
-      display: flex;
-      width: 8vmin;
-      align-content: center;
-      justify-content: center;
-    }
+    .cards-body {
+      display: grid;
+      gap: 1vmin;
+      padding: 1vmin;
 
-    .group-cards {
-      grid-column: 2;
-      display: flex;
-      flex-direction: row;
+      .group-header {
+        grid-column: 1;
+        display: flex;
+        width: 8vmin;
+        justify-content: center;
+
+
+        .group-header-letter {}
+      }
+
+      .group-cards {
+        grid-column: 2;
+        display: flex;
+        flex-direction: row;
+      }
     }
   }
 
@@ -270,5 +291,23 @@ body {
       height: 30vh;
       object-fit: contain;
     }
+  }
+}
+
+.letter-icon {
+  display: flex;
+  height: 3vmin;
+  align-items: center;
+  transform: translateX(-50%);
+
+  img {
+    width: 3vmin;
+    height: 3vmin;
+    transform: translateX(-30%);
+  }
+
+  * {
+    position: absolute;
+    // transform: translateX(-50%)
   }
 }

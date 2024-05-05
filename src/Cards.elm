@@ -2,7 +2,7 @@ module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, view
 
 import Html exposing (Html, div, img, text)
 import Html.Attributes exposing (class, name, src)
-import Icons exposing (letterIcon, persuasionIcon)
+import Icons exposing (agentAccessIcon, factionIcon, gradeIcon, letterIcon, persuasionIcon)
 import List.Extra as List
 
 
@@ -45,6 +45,31 @@ type Faction
     | EmperorFaction
 
 
+factionSynergyList : List Faction
+factionSynergyList =
+    [ EmperorFaction
+    , SpacingGuildFaction
+    , BeneGesseritFaction
+    , FremenFaction
+    ]
+
+
+factionIconImage : Faction -> String
+factionIconImage faction =
+    case faction of
+        EmperorFaction ->
+            "faction-emperor-icon.png"
+
+        SpacingGuildFaction ->
+            "faction-spacing-guild-icon.png"
+
+        BeneGesseritFaction ->
+            "faction-bene-gesserit-icon.png"
+
+        FremenFaction ->
+            "faction-fremen-icon.png"
+
+
 type AgentAccess
     = EmperorAccess
     | SpacingGuildAccess
@@ -54,6 +79,47 @@ type AgentAccess
     | CityAccess
     | SpiceTradeAccess
     | SpyAccess
+
+
+agentAccessList : List AgentAccess
+agentAccessList =
+    [ EmperorAccess
+    , SpacingGuildAccess
+    , BeneGesseritAccess
+    , FremenAccess
+    , LandsraadAccess
+    , CityAccess
+    , SpiceTradeAccess
+    , SpyAccess
+    ]
+
+
+agentAccessImage : AgentAccess -> String
+agentAccessImage agentAccess =
+    case agentAccess of
+        EmperorAccess ->
+            "access-emperor-icon.png"
+
+        SpacingGuildAccess ->
+            "access-spacing-guild-icon.png"
+
+        BeneGesseritAccess ->
+            "access-bene-gesserit-icon.png"
+
+        FremenAccess ->
+            "access-fremen-icon.png"
+
+        LandsraadAccess ->
+            "access-landsraad-icon.png"
+
+        CityAccess ->
+            "access-city-icon.png"
+
+        SpiceTradeAccess ->
+            "access-spice-trade-icon.png"
+
+        SpyAccess ->
+            "access-spy-icon.png"
 
 
 type Grade
@@ -67,6 +133,55 @@ type Grade
     | GradeSpp
     | GradeF
     | GradeU
+
+
+gradeList : List Grade
+gradeList =
+    [ GradeSpp
+    , GradeS
+    , GradeAp
+    , GradeA
+    , GradeAm
+    , GradeB
+    , GradeC
+    , GradeD
+    , GradeF
+    , GradeU
+    ]
+
+
+gradeString : Grade -> String
+gradeString grade =
+    case grade of
+        GradeSpp ->
+            "S++"
+
+        GradeS ->
+            "S"
+
+        GradeAp ->
+            "A+"
+
+        GradeA ->
+            "A"
+
+        GradeAm ->
+            "A-"
+
+        GradeB ->
+            "B"
+
+        GradeC ->
+            "C"
+
+        GradeD ->
+            "D"
+
+        GradeF ->
+            "F"
+
+        GradeU ->
+            "U"
 
 
 fullCardList : List Card
@@ -187,11 +302,7 @@ groupedBy orderBy cardList =
 
         CardOrderByFactionSynergy ->
             GroupedByFactionSynergy
-                ([ EmperorFaction
-                 , SpacingGuildFaction
-                 , BeneGesseritFaction
-                 , FremenFaction
-                 ]
+                (factionSynergyList
                     |> List.map
                         (\f ->
                             ( f
@@ -204,15 +315,7 @@ groupedBy orderBy cardList =
 
         CardOrderByAgentAccess ->
             GroupedByAgentAccess
-                ([ EmperorAccess
-                 , SpacingGuildAccess
-                 , BeneGesseritAccess
-                 , FremenAccess
-                 , LandsraadAccess
-                 , CityAccess
-                 , SpiceTradeAccess
-                 , SpyAccess
-                 ]
+                (agentAccessList
                     |> List.map
                         (\a ->
                             ( a
@@ -225,16 +328,7 @@ groupedBy orderBy cardList =
 
         CardOrderByGrade ->
             GroupedByGrade
-                ([ GradeSpp
-                 , GradeS
-                 , GradeAp
-                 , GradeA
-                 , GradeAm
-                 , GradeB
-                 , GradeC
-                 , GradeD
-                 , GradeF
-                 ]
+                (gradeList
                     |> List.map
                         (\g ->
                             ( g
@@ -268,8 +362,20 @@ view cardsGroup =
         GroupedByPersuasionCost groups ->
             groupsFn persuasionIcon groups
 
-        _ ->
-            [ text "Under Construction" ]
+        GroupedByFactionSynergy groups ->
+            groups
+                |> List.map (Tuple.mapFirst factionIconImage)
+                |> groupsFn factionIcon
+
+        GroupedByAgentAccess groups ->
+            groups
+                |> List.map (Tuple.mapFirst agentAccessImage)
+                |> groupsFn agentAccessIcon
+
+        GroupedByGrade groups ->
+            groups
+                |> List.map (Tuple.mapFirst gradeString)
+                |> groupsFn gradeIcon
 
 
 viewCards : List Card -> Html msg

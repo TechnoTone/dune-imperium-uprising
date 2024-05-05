@@ -216,6 +216,7 @@ fullCardList =
     , Card "Northern Watermaster" "card-northernwatermaster.jpg" 3 [ FremenFaction ] [ CityAccess ] GradeB
     , Card "Overthrow" "card-overthrow.jpg" 8 [] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeSpp
     , Card "Paracompass" "card-paracompass.jpg" 4 [] [ CityAccess ] GradeC
+    , Card "Prepare The Way" "card-preparetheway.jpg" 2 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess ] GradeU
     , Card "Price Is No Object" "card-priceisnoobject.jpg" 6 [ EmperorFaction, BeneGesseritFaction ] [ EmperorAccess, BeneGesseritAccess ] GradeAp
     , Card "Priority Contracts" "card-prioritycontracts.jpg" 6 [ SpacingGuildFaction ] [ LandsraadAccess, SpiceTradeAccess ] GradeB
     , Card "Public Spectacle" "card-publicspectacle.jpg" 4 [ EmperorFaction ] [ SpyAccess ] GradeS

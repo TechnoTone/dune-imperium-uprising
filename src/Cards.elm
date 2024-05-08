@@ -1,6 +1,6 @@
 module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, view)
 
-import Html exposing (Html, div, img, text)
+import Html exposing (Html, cite, div, img, text)
 import Html.Attributes exposing (class, name, src)
 import Icons exposing (agentAccessIcon, factionIcon, gradeIcon, letterIcon, persuasionIcon)
 import List.Extra as List
@@ -39,7 +39,8 @@ type CardsGroup
 
 
 type Faction
-    = FremenFaction
+    = NoFaction
+    | FremenFaction
     | BeneGesseritFaction
     | SpacingGuildFaction
     | EmperorFaction
@@ -47,7 +48,8 @@ type Faction
 
 factionSynergyList : List Faction
 factionSynergyList =
-    [ EmperorFaction
+    [ NoFaction
+    , EmperorFaction
     , SpacingGuildFaction
     , BeneGesseritFaction
     , FremenFaction
@@ -57,6 +59,9 @@ factionSynergyList =
 factionIconImage : Faction -> String
 factionIconImage faction =
     case faction of
+        NoFaction ->
+            "faction-none-icon.png"
+
         EmperorFaction ->
             "faction-emperor-icon.png"
 
@@ -71,7 +76,8 @@ factionIconImage faction =
 
 
 type AgentAccess
-    = EmperorAccess
+    = NoAccess
+    | EmperorAccess
     | SpacingGuildAccess
     | BeneGesseritAccess
     | FremenAccess
@@ -83,7 +89,8 @@ type AgentAccess
 
 agentAccessList : List AgentAccess
 agentAccessList =
-    [ EmperorAccess
+    [ NoAccess
+    , EmperorAccess
     , SpacingGuildAccess
     , BeneGesseritAccess
     , FremenAccess
@@ -97,6 +104,9 @@ agentAccessList =
 agentAccessImage : AgentAccess -> String
 agentAccessImage agentAccess =
     case agentAccess of
+        NoAccess ->
+            "access-none-icon.png"
+
         EmperorAccess ->
             "access-emperor-icon.png"
 
@@ -192,58 +202,65 @@ fullCardList =
     , Card "Calculus of Power" "card-calculusofpower.jpg" 3 [ EmperorFaction ] [ CityAccess, SpyAccess ] GradeA
     , Card "Captured Mentat" "card-capturedmentat.jpg" 5 [] [ LandsraadAccess, SpiceTradeAccess ] GradeAm
     , Card "Cargo Runner " "card-cargorunner.jpg" 3 [ SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
-    , Card "Chani, Clever Tactician" "card-chaniclevertactician.jpg" 5 [ FremenFaction ] [ FremenAccess, LandsraadAccess, CityAccess ] GradeB
-    , Card "Corrinth City" "card-corrinthcity.jpg" 6 [ EmperorFaction ] [ EmperorAccess, SpiceTradeAccess ] GradeS
+    , Card "Chani, Clever Tactician" "card-chaniclevertactician.jpg" 5 [ FremenFaction ] [ FremenAccess, CityAccess, SpiceTradeAccess ] GradeB
+    , Card "Corrinth City" "card-corrinthcity.jpg" 6 [ EmperorFaction ] [ EmperorAccess, LandsraadAccess ] GradeS
     , Card "Covert Operation" "card-covertoperation.jpg" 3 [] [ SpyAccess ] GradeB
-    , Card "Dangerous Rhetoric" "card-dangerousrhetoric.jpg" 3 [] [ SpiceTradeAccess, SpyAccess ] GradeA
+    , Card "Dangerous Rhetoric" "card-dangerousrhetoric.jpg" 3 [] [ LandsraadAccess, SpyAccess ] GradeA
     , Card "Delivery Agreement" "card-deliveryagreement.jpg" 5 [ SpacingGuildFaction ] [ CityAccess ] GradeC
-    , Card "Desert Power" "card-desertpower.jpg" 6 [ FremenFaction ] [ LandsraadAccess ] GradeA
-    , Card "Desert Survival" "card-desertsurvival.jpg" 2 [ FremenFaction ] [ LandsraadAccess ] GradeC
+    , Card "Desert Power" "card-desertpower.jpg" 6 [ FremenFaction ] [ SpiceTradeAccess ] GradeA
+    , Card "Desert Survival" "card-desertsurvival.jpg" 2 [ FremenFaction ] [ SpiceTradeAccess ] GradeC
     , Card "Double Agent" "card-doubleagent.jpg" 3 [ EmperorFaction, SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
     , Card "Ecological Testing Station" "card-ecologicaltestingstation.jpg" 3 [ FremenFaction ] [ FremenAccess, CityAccess ] GradeC
-    , Card "Fedaykin Stilltent" "card-fedaykinstilltent.jpg" 2 [ FremenFaction ] [ LandsraadAccess ] GradeB
+    , Card "Fedaykin Stilltent" "card-fedaykinstilltent.jpg" 2 [ FremenFaction ] [ SpiceTradeAccess ] GradeB
     , Card "Guild Envoy" "card-guildenvoy.jpg" 3 [ SpacingGuildFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeA
     , Card "Guild Spy" "card-guildspy.jpg" 3 [ SpacingGuildFaction ] [ SpyAccess ] GradeS
-    , Card "Hidden Missive" "card-hiddenmissive.jpg" 2 [ BeneGesseritFaction ] [ SpiceTradeAccess ] GradeD
+    , Card "Hidden Missive" "card-hiddenmissive.jpg" 2 [ BeneGesseritFaction ] [ LandsraadAccess ] GradeD
     , Card "Imperial Spymaster" "card-imperialspymaster.jpg" 2 [ EmperorFaction ] [ EmperorAccess, SpyAccess ] GradeC
     , Card "In High Places" "card-inhighplaces.jpg" 5 [ EmperorFaction, BeneGesseritFaction ] [ EmperorAccess, BeneGesseritAccess ] GradeAp
     , Card "Interstellar Trade" "card-interstellartrade.jpg" 7 [ SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeS
     , Card "Junction Headquarters" "card-junctionheadquarters.jpg" 6 [ SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
-    , Card "Leadership" "card-leadership.jpg" 5 [ FremenFaction ] [ FremenAccess, LandsraadAccess ] GradeA
+    , Card "Leadership" "card-leadership.jpg" 5 [ FremenFaction ] [ FremenAccess, SpiceTradeAccess ] GradeA
     , Card "Long Live The Fighters" "card-longlivethefighters.jpg" 7 [ FremenFaction ] [ FremenAccess, CityAccess ] GradeAp
     , Card "Maker Keeper" "card-makerkeeper.jpg" 2 [ BeneGesseritFaction, FremenFaction ] [ CityAccess ] GradeB
-    , Card "Maula Pistol" "card-maulapistol.jpg" 3 [ FremenFaction ] [ LandsraadAccess, CityAccess ] GradeD
+    , Card "Maula Pistol" "card-maulapistol.jpg" 3 [ FremenFaction ] [ CityAccess, SpiceTradeAccess ] GradeD
     , Card "Northern Watermaster" "card-northernwatermaster.jpg" 3 [ FremenFaction ] [ CityAccess ] GradeB
     , Card "Overthrow" "card-overthrow.jpg" 8 [] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeSpp
     , Card "Paracompass" "card-paracompass.jpg" 4 [] [ CityAccess ] GradeC
-    , Card "Prepare The Way" "card-preparetheway.jpg" 2 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess ] GradeU
     , Card "Price Is No Object" "card-priceisnoobject.jpg" 6 [ EmperorFaction, BeneGesseritFaction ] [ EmperorAccess, BeneGesseritAccess ] GradeAp
     , Card "Priority Contracts" "card-prioritycontracts.jpg" 6 [ SpacingGuildFaction ] [ LandsraadAccess, SpiceTradeAccess ] GradeB
     , Card "Public Spectacle" "card-publicspectacle.jpg" 4 [ EmperorFaction ] [ SpyAccess ] GradeS
     , Card "Rebel Supplier" "card-rebelsupplier.jpg" 3 [ FremenFaction ] [ CityAccess ] GradeC
-    , Card "Reliable Informant" "card-reliableinformant.jpg" 2 [ SpacingGuildFaction ] [ SpacingGuildAccess, SpyAccess ] GradeA
-    , Card "Sardaukar Coordination" "card-sardaukarcoordination.jpg" 4 [ EmperorFaction ] [ EmperorAccess, SpiceTradeAccess ] GradeS
+    , Card "Reliable Informant" "card-reliableinformant.jpg" 2 [ SpacingGuildFaction ] [ SpacingGuildAccess ] GradeA
+    , Card "Sardaukar Coordination" "card-sardaukarcoordination.jpg" 4 [ EmperorFaction ] [ EmperorAccess, LandsraadAccess ] GradeS
     , Card "Sardaukar Soldier" "card-sardaukarsoldier.jpg" 1 [ EmperorFaction ] [ CityAccess ] GradeD
-    , Card "Shishakli" "card-shishakli.jpg" 4 [ FremenFaction ] [ LandsraadAccess, CityAccess ] GradeA
-    , Card "Smuggler’s Haven" "card-smugglershaven.jpg" 4 [ SpacingGuildFaction ] [ SpacingGuildAccess, LandsraadAccess ] GradeS
-    , Card "Smuggler’s Harvester" "card-smugglersharvester.jpg" 1 [ SpacingGuildFaction ] [ LandsraadAccess ] GradeC
+    , Card "Shishakli" "card-shishakli.jpg" 4 [ FremenFaction ] [ CityAccess, SpiceTradeAccess ] GradeA
+    , Card "Smuggler’s Haven" "card-smugglershaven.jpg" 4 [ SpacingGuildFaction ] [ SpacingGuildAccess, SpiceTradeAccess ] GradeS
+    , Card "Smuggler’s Harvester" "card-smugglersharvester.jpg" 1 [ SpacingGuildFaction ] [ SpiceTradeAccess ] GradeC
     , Card "Southern Elders" "card-southernelders.jpg" 4 [ BeneGesseritFaction, FremenFaction ] [ BeneGesseritAccess, FremenAccess ] GradeA
     , Card "Spacetime Folding" "card-spacetimefolding.jpg" 1 [ SpacingGuildFaction ] [ SpacingGuildAccess ] GradeB
-    , Card "Spacing Guild’s Favor" "card-spacingguildsfavor.jpg" 5 [ SpacingGuildFaction ] [ SpacingGuildAccess, LandsraadAccess ] GradeA
+    , Card "Spacing Guild’s Favor" "card-spacingguildsfavor.jpg" 5 [ SpacingGuildFaction ] [ SpacingGuildAccess, SpiceTradeAccess ] GradeA
     , Card "Spy Network" "card-spynetwork.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [] GradeB
     , Card "Steersman" "card-steersman.jpg" 8 [ SpacingGuildFaction ] [ SpacingGuildAccess, LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeS
-    , Card "Stilgar, The Devoted" "card-stilgarthedevoted.jpg" 6 [ FremenFaction ] [ FremenAccess, LandsraadAccess, CityAccess ] GradeS
+    , Card "Stilgar, The Devoted" "card-stilgarthedevoted.jpg" 6 [ FremenFaction ] [ FremenAccess, SpiceTradeAccess, CityAccess ] GradeS
     , Card "Strike Fleet" "card-strikefleet.jpg" 5 [] [ SpyAccess ] GradeS
     , Card "Subversive Advisor" "card-subversiveadvisor.jpg" 5 [] [ SpyAccess ] GradeB
-    , Card "The Spice Must Flow" "card-thespicemustflow.jpg" 9 [ SpacingGuildFaction ] [] GradeU
-    , Card "Thumper" "card-thumper.jpg" 3 [ FremenFaction ] [ LandsraadAccess ] GradeD
+    , Card "Thumper" "card-thumper.jpg" 3 [ FremenFaction ] [ SpiceTradeAccess ] GradeD
     , Card "Treacherous Maneuver" "card-treacherousmaneuver.jpg" 5 [ EmperorFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeB
     , Card "Tread in Darkness" "card-treadindarkness.jpg" 4 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeC
     , Card "Truthtrance" "card-truthtrance.jpg" 4 [ BeneGesseritFaction ] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeB
     , Card "Undercover Asset" "card-undercoverasset.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeA
     , Card "Unswerving Loyalty" "card-unswervingloyalty.jpg" 1 [ FremenFaction ] [] GradeD
-    , Card "Weirding Woman" "card-weirdingwoman.jpg" 1 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess ] GradeF
+    , Card "Weirding Woman" "card-weirdingwoman.jpg" 1 [ BeneGesseritFaction ] [ SpiceTradeAccess, CityAccess ] GradeF
     , Card "Wheels Within Wheels" "card-wheelswithinwheels.jpg" 2 [ EmperorFaction, SpacingGuildFaction ] [ SpyAccess ] GradeB
+    , Card "Signet Ring" "card-signetring.jpg" 0 [] [ LandsraadAccess, CityAccess, SpiceTradeAccess ] GradeU
+    , Card "Seek Allies" "card-seekallies.jpg" 0 [] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeU
+    , Card "Reconnaissance" "card-reconnaissance.jpg" 0 [] [ LandsraadAccess ] GradeU
+    , Card "Diplomacy" "card-diplomacy.jpg" 0 [] [ EmperorAccess, SpacingGuildAccess, BeneGesseritAccess, FremenAccess ] GradeU
+    , Card "Dagger" "card-dagger.jpg" 0 [] [ LandsraadAccess ] GradeU
+    , Card "Dune, The Desert Planet" "card-dunethedesertplanet.jpg" 0 [] [ SpiceTradeAccess ] GradeU
+    , Card "Convincing Argument" "card-convincingargument.jpg" 0 [] [] GradeU
+    , Card "Prepare The Way" "card-preparetheway.jpg" 2 [ BeneGesseritFaction ] [ LandsraadAccess, CityAccess ] GradeU
+    , Card "The Spice Must Flow" "card-thespicemustflow.jpg" 9 [ SpacingGuildFaction ] [] GradeU
     ]
 
 
@@ -302,26 +319,46 @@ groupedBy orderBy cardList =
                 )
 
         CardOrderByFactionSynergy ->
+            let
+                matches : Faction -> List Faction -> Bool
+                matches faction cardFactionList =
+                    case faction of
+                        NoFaction ->
+                            List.isEmpty cardFactionList
+
+                        _ ->
+                            List.member faction cardFactionList
+            in
             GroupedByFactionSynergy
                 (factionSynergyList
                     |> List.map
                         (\f ->
                             ( f
                             , cardList
-                                |> List.filter (.factionSynergy >> List.member f)
+                                |> List.filter (.factionSynergy >> matches f)
                             )
                         )
                     |> List.filter (Tuple.second >> List.isEmpty >> not)
                 )
 
         CardOrderByAgentAccess ->
+            let
+                matches : AgentAccess -> List AgentAccess -> Bool
+                matches agentAccess cardAgentAccessList =
+                    case agentAccess of
+                        NoAccess ->
+                            List.isEmpty cardAgentAccessList
+
+                        _ ->
+                            List.member agentAccess cardAgentAccessList
+            in
             GroupedByAgentAccess
                 (agentAccessList
                     |> List.map
                         (\a ->
                             ( a
                             , cardList
-                                |> List.filter (.agentAccess >> List.member a)
+                                |> List.filter (.agentAccess >> matches a)
                             )
                         )
                     |> List.filter (Tuple.second >> List.isEmpty >> not)
@@ -384,6 +421,7 @@ viewCards cards =
     div
         [ class "group-cards" ]
         (cards
+            |> List.sortBy .name
             |> List.map .imageName
             |> List.map
                 (\c ->

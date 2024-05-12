@@ -122,13 +122,23 @@ nothing =
 
 view : Model -> Browser.Document Msg
 view model =
+    let
+        orientationClass : Attribute msg
+        orientationClass =
+            case model.viewOrientation of
+                Portrait ->
+                    class "portrait"
+
+                Landscape ->
+                    class "landscape"
+    in
     { title = "Dune Imperium: Uprising"
     , body =
         [ div
             []
             [ buttonBar model
             , div
-                [ class "screen-container" ]
+                [ class "screen-container", orientationClass ]
                 [ viewScreen model ]
             ]
         ]

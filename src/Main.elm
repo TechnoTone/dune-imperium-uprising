@@ -26,8 +26,7 @@ type alias Model =
 
 
 type Screen
-    = Menu
-    | Board
+    = Board
     | Leaders Leader
     | Cards
     | Manuals
@@ -92,7 +91,7 @@ type Action
 initModel : () -> ( Model, Cmd Msg )
 initModel =
     always <|
-        ( { screen = Menu
+        ( { screen = Board
           , viewportSize = ( 0, 0 )
           , viewOrientation = Portrait
           , zoomPosition = ( 0, 0 )
@@ -146,12 +145,6 @@ view model =
 buttonBar : Model -> Html.Html Msg
 buttonBar model =
     let
-        homeButton : Html.Html Msg
-        homeButton =
-            div
-                [ class "home-button", onClick <| Show Menu ]
-                [ img [ src "home.png" ] [] ]
-
         cardBarButton : Html.Html Msg
         cardBarButton =
             case model.cardBarView of
@@ -174,14 +167,10 @@ buttonBar model =
                 ]
     in
     case model.screen of
-        Menu ->
-            nothing
-
         Leaders _ ->
             div
                 [ class "button-bar" ]
-                [ homeButton
-                , div
+                [ div
                     [ class "leader-avatars" ]
                     [ leaderAvatar ( "avatar-mauddib.jpg", MaudDib )
                     , leaderAvatar ( "avatar-gurneyhalleck.jpg", GurneyHalleck )
@@ -199,10 +188,10 @@ buttonBar model =
         Cards ->
             div
                 [ class "button-bar" ]
-                [ homeButton, cardBarButton, cardFilterInput ]
+                [ cardBarButton, cardFilterInput ]
 
         _ ->
-            div [ class "button-bar" ] [ homeButton ]
+            div [ class "button-bar" ] []
 
 
 leaderAvatar : ( String, Leader ) -> Html.Html Msg
@@ -280,9 +269,6 @@ viewCardOrderImage order =
 viewScreen : Model -> Html.Html Msg
 viewScreen model =
     case model.screen of
-        Menu ->
-            viewMenu
-
         Board ->
             viewFullScreenImage "board.jpg" model
 
@@ -297,16 +283,6 @@ viewScreen model =
 
         CombatManual ->
             viewFullScreenImage "combatreference.png" model
-
-
-viewMenu : Html.Html Msg
-viewMenu =
-    tileList "Dune Imperium: Uprising"
-        [ ( "Board", "menu-board.jpg", onClick <| Show Board )
-        , ( "Leaders", "menu-leaders.png", onClick <| Show (Leaders MaudDib) )
-        , ( "Cards", "menu-cards.jpg", onClick <| Show Cards )
-        , ( "Manuals", "menu-manuals.png", onClick <| Show Manuals )
-        ]
 
 
 viewLeaders : Leader -> Html.Html Msg

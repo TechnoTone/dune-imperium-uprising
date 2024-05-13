@@ -135,11 +135,9 @@ view model =
     { title = "Dune Imperium: Uprising"
     , body =
         [ div
-            []
+            [ class "screen-container", orientationClass ]
             [ buttonBar model
-            , div
-                [ class "screen-container", orientationClass ]
-                [ viewScreen model ]
+            , viewScreen model
             ]
         ]
     }

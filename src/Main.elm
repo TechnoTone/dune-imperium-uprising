@@ -27,7 +27,7 @@ type alias Model =
 
 type Screen
     = Board
-    | Leaders Leader
+    | Leaders
     | Cards
     | Manuals
     | CombatManual
@@ -144,126 +144,90 @@ view model =
 
 buttonBar : Model -> Html.Html Msg
 buttonBar model =
-    let
-        cardBarButton : Html.Html Msg
-        cardBarButton =
-            case model.cardBarView of
-                CardIcon ->
-                    viewCardBarIcon model.cardOptions.orderBy
-
-                CardList ->
-                    viewCardBarList model.cardOptions.orderBy
-
-        cardFilterInput : Html.Html Msg
-        cardFilterInput =
-            div
-                [ class "card-filter" ]
-                [ input
-                    [ placeholder "Filter"
-                    , value model.cardOptions.filter
-                    , onInput CardFilterChange
-                    ]
-                    []
-                ]
-    in
-    case model.screen of
-        Leaders _ ->
-            div
-                [ class "button-bar" ]
-                [ div
-                    [ class "leader-avatars" ]
-                    [ leaderAvatar ( "avatar-mauddib.jpg", MaudDib )
-                    , leaderAvatar ( "avatar-gurneyhalleck.jpg", GurneyHalleck )
-                    , leaderAvatar ( "avatar-feydrauthaharkonnen.jpg", FeydRauthaHarkonnen )
-                    , leaderAvatar ( "avatar-ladymargotfenring.jpg", LadyMargotFenring )
-                    , leaderAvatar ( "avatar-ladyambermetulli.jpg", LadyAmberMetulli )
-                    , leaderAvatar ( "avatar-princessirulan.jpg", PrincessIrulan )
-                    , leaderAvatar ( "avatar-ladyjessica.jpg", LadyJessica )
-                    , leaderAvatar ( "avatar-reverendmotherjessica.jpg", ReverendMotherJessica )
-                    , leaderAvatar ( "avatar-shaddamconringiv.jpg", ShaddamConringIV )
-                    , leaderAvatar ( "avatar-stabantuer.jpg", StabanTuer )
-                    ]
-                ]
-
-        Cards ->
-            div
-                [ class "button-bar" ]
-                [ cardBarButton, cardFilterInput ]
-
-        _ ->
-            div [ class "button-bar" ] []
-
-
-leaderAvatar : ( String, Leader ) -> Html.Html Msg
-leaderAvatar ( imageSource, leader ) =
     div
-        [ class "leader-avatar" ]
-        [ a
-            [ onClick <| Show (Leaders leader) ]
-            [ img [ src imageSource ] [] ]
+        [ class "button-bar" ]
+        [ simpleBarButton "menu-board.jpg" (Show Board) (model.screen == Board)
+        , simpleBarButton "menu-leaders.png" (Show Leaders) (model.screen == Leaders)
         ]
 
 
-viewCardBarIcon : CardOrderBy -> Html.Html Msg
-viewCardBarIcon orderBy =
+buttonBarButton : Bool -> List (Html.Html msg) -> Html.Html msg
+buttonBarButton isActive content =
     div
-        [ class "card-button" ]
-        [ div [ class "card-button-icon", onClick ShowCardBarList ] [ viewCardOrderImage orderBy ] ]
+        [ classList [ ( "button", True ), ( "active", isActive ) ] ]
+        content
 
 
-viewCardBarList : CardOrderBy -> Html.Html Msg
-viewCardBarList currentCardOrderBy =
-    let
-        item : String -> CardOrderBy -> Html.Html Msg
-        item label cardOrderBy =
-            div
-                [ classList
-                    [ ( "item", True )
-                    , ( "current", cardOrderBy == currentCardOrderBy )
-                    ]
-                , onClick <| ShowCardBarIcon cardOrderBy
-                ]
-                [ viewCardOrderImage cardOrderBy, text label ]
-    in
-    div
-        [ class "card-button" ]
-        [ div
-            [ class "card-button-icon" ]
-            [ viewCardOrderImage currentCardOrderBy
-            ]
-        , div
-            [ class "list-background"
-            , onClick <| ShowCardBarIcon currentCardOrderBy
-            ]
-            []
-        , div
-            [ class "list" ]
-            [ item "Name" CardOrderByAz
-            , item "Persuasion Cost" CardOrderByPersuasionCost
-            , item "Agent Access" CardOrderByAgentAccess
-            , item "Faction Synergy" CardOrderByFactionSynergy
-            , item "Grade" CardOrderByGrade
-            ]
-        ]
+simpleBarButton : String -> Msg -> Bool -> Html.Html Msg
+simpleBarButton imageSource msg isActive =
+    if isActive then
+        buttonBarButton isActive [ div [ onClick msg ] [ img [ src imageSource ] [] ] ]
+
+    else
+        buttonBarButton isActive [ div [ onClick msg ] [ img [ src imageSource ] [] ] ]
 
 
-viewCardOrderImage : CardOrderBy -> Html.Html Msg
-viewCardOrderImage order =
-    case order of
-        CardOrderByAz ->
-            letterIcon "A-Z"
 
-        CardOrderByPersuasionCost ->
-            img [ src "persuasion-icon.png" ] []
-
-        CardOrderByAgentAccess ->
-            img [ src "access-icon.png" ] []
-
-        CardOrderByFactionSynergy ->
-            img [ src "faction-icon.png" ] []
-
-        CardOrderByGrade ->
-            img [ src "grade-icon.png" ] []
+-- leaderAvatar : ( String, Leader ) -> Html.Html Msg
+-- leaderAvatar ( imageSource, leader ) =
+--     div
+--         [ class "leader-avatar" ]
+--         [ a
+--             [ onClick <| Show (Leaders leader) ]
+--             [ img [ src imageSource ] [] ]
+--         ]
+-- viewCardBarIcon : CardOrderBy -> Html.Html Msg
+-- viewCardBarIcon orderBy =
+--     div
+--         [ class "card-button" ]
+--         [ div [ class "card-button-icon", onClick ShowCardBarList ] [ viewCardOrderImage orderBy ] ]
+-- viewCardBarList : CardOrderBy -> Html.Html Msg
+-- viewCardBarList currentCardOrderBy =
+--     let
+--         item : String -> CardOrderBy -> Html.Html Msg
+--         item label cardOrderBy =
+--             div
+--                 [ classList
+--                     [ ( "item", True )
+--                     , ( "current", cardOrderBy == currentCardOrderBy )
+--                     ]
+--                 , onClick <| ShowCardBarIcon cardOrderBy
+--                 ]
+--                 [ viewCardOrderImage cardOrderBy, text label ]
+--     in
+--     div
+--         [ class "card-button" ]
+--         [ div
+--             [ class "card-button-icon" ]
+--             [ viewCardOrderImage currentCardOrderBy
+--             ]
+--         , div
+--             [ class "list-background"
+--             , onClick <| ShowCardBarIcon currentCardOrderBy
+--             ]
+--             []
+--         , div
+--             [ class "list" ]
+--             [ item "Name" CardOrderByAz
+--             , item "Persuasion Cost" CardOrderByPersuasionCost
+--             , item "Agent Access" CardOrderByAgentAccess
+--             , item "Faction Synergy" CardOrderByFactionSynergy
+--             , item "Grade" CardOrderByGrade
+--             ]
+--         ]
+-- viewCardOrderImage : CardOrderBy -> Html.Html Msg
+-- viewCardOrderImage order =
+--     case order of
+--         CardOrderByAz ->
+--             letterIcon "A-Z"
+--         CardOrderByPersuasionCost ->
+--             img [ src "persuasion-icon.png" ] []
+--         CardOrderByAgentAccess ->
+--             img [ src "access-icon.png" ] []
+--         CardOrderByFactionSynergy ->
+--             img [ src "faction-icon.png" ] []
+--         CardOrderByGrade ->
+--             img [ src "grade-icon.png" ] []
 
 
 viewScreen : Model -> Html.Html Msg
@@ -272,8 +236,8 @@ viewScreen model =
         Board ->
             viewFullScreenImage "board.jpg" model
 
-        Leaders leader ->
-            viewLeaders leader
+        Leaders ->
+            viewLeaders
 
         Cards ->
             viewCards model.cardOptions
@@ -285,47 +249,19 @@ viewScreen model =
             viewFullScreenImage "combatreference.png" model
 
 
-viewLeaders : Leader -> Html.Html Msg
-viewLeaders currentLeader =
+viewLeaders : Html.Html Msg
+viewLeaders =
     div [ class "leaders" ]
-        [ div
-            [ class "leader" ]
-            [ img
-                [ src
-                    (case currentLeader of
-                        MaudDib ->
-                            "leader-mauddib.png"
-
-                        GurneyHalleck ->
-                            "leader-gurneyhalleck.png"
-
-                        FeydRauthaHarkonnen ->
-                            "leader-feydrauthaharkonnen.png"
-
-                        LadyMargotFenring ->
-                            "leader-ladymargotfenring.png"
-
-                        LadyAmberMetulli ->
-                            "leader-ladyambermetulli.png"
-
-                        PrincessIrulan ->
-                            "leader-princessirulan.png"
-
-                        LadyJessica ->
-                            "leader-ladyjessica.png"
-
-                        ReverendMotherJessica ->
-                            "leader-reverendmotherjessica.png"
-
-                        ShaddamConringIV ->
-                            "leader-shaddamconringiv.png"
-
-                        StabanTuer ->
-                            "leader-stabantuer.png"
-                    )
-                ]
-                []
-            ]
+        [ div [ class "leader" ] [ img [ src "leader-mauddib.png" ] [] ]
+        , div [ class "leader" ] [ img [ src "leader-gurneyhalleck.png" ] [] ]
+        , div [ class "leader" ] [ img [ src "leader-feydrauthaharkonnen.png" ] [] ]
+        , div [ class "leader" ] [ img [ src "leader-ladymargotfenring.png" ] [] ]
+        , div [ class "leader" ] [ img [ src "leader-ladyambermetulli.png" ] [] ]
+        , div [ class "leader" ] [ img [ src "leader-princessirulan.png" ] [] ]
+        , div [ class "leader" ] [ img [ src "leader-ladyjessica.png" ] [] ]
+        , div [ class "leader" ] [ img [ src "leader-reverendmotherjessica.png" ] [] ]
+        , div [ class "leader" ] [ img [ src "leader-shaddamconringiv.png" ] [] ]
+        , div [ class "leader" ] [ img [ src "leader-stabantuer.png" ] [] ]
         ]
 
 

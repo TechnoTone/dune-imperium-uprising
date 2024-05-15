@@ -47,6 +47,186 @@ body {
     width: 100%;
     height: 100%;
     position: absolute;
+
+    .button-bar {
+      position: fixed;
+      float: left;
+      display: flex;
+      gap: 1vmin;
+      align-items: center;
+      margin: 1vmin;
+
+      .button {
+        display: flex;
+
+        img {
+          width: 20vmin;
+          height: 20vmin;
+          cursor: pointer;
+          object-fit: contain;
+          border: 0.5vmin solid @orange3;
+          border-radius: 2vmin;
+
+          &:hover {
+            border-color: @orange2;
+          }
+        }
+
+        &.active {
+          img {
+            border-color: @orange2;
+          }
+        }
+      }
+
+      .leader-avatars {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+
+        .leader-avatar {
+          padding-left: 1vmin;
+          cursor: pointer;
+
+          img {
+            border-radius: 2vmin;
+            width: 6vmin;
+            height: 6vmin;
+          }
+        }
+      }
+
+      .card-button {
+        display: flex;
+
+        .card-button-icon {
+          display: flex;
+
+          >.group-icon {
+            padding-top: 1vmin;
+          }
+        }
+
+        .list-background {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: #1118;
+        }
+
+        .list {
+          position: fixed;
+          display: flex;
+          flex-direction: column;
+          border: 1px solid @orange1;
+          background-color: @orange4;
+
+          .item {
+            display: flex;
+            flex-direction: row;
+            height: 8vmin;
+            align-items: center;
+            padding: 2vmin;
+            cursor: pointer;
+
+            .card-button-icon {
+              display: flex;
+              height: 8vmin;
+            }
+
+            &:hover {
+              background-color: @orange2;
+            }
+          }
+
+          .current {
+            background-color: @orange3;
+          }
+        }
+
+        img {
+          cursor: pointer;
+          width: 6vmin;
+          object-fit: contain;
+          margin-right: 1vmin;
+        }
+
+        .group-icon {
+          display: flex;
+          flex-direction: column;
+          justify-items: center;
+          text-align: center;
+          cursor: pointer;
+          width: 6vmin;
+          height: 6vmin;
+          margin-right: 1vmin;
+
+          img {
+            width: 6vmin;
+            height: 6vmin;
+          }
+
+          .label {
+            transform: translateY(-4.7vmin);
+            font-size: 3vmin;
+          }
+
+        }
+      }
+
+      .card-filter {
+        align-content: center;
+        justify-content: center;
+
+        flex: 1;
+
+        input {
+          border-color: @orange1;
+          background-color: @orange3;
+          border-style: solid;
+          border-width: 1px;
+          font-size: 2em;
+          color: @orange2;
+          font-family: @font-family;
+
+          &:focus {
+            outline: none;
+          }
+
+          &::selection {
+            color: @orange3;
+            background: @orange2;
+          }
+
+          &::placeholder {
+            color: @orange4;
+          }
+        }
+      }
+
+    }
+
+    &.portrait {
+      .button-bar {
+        flex-direction: row;
+        width: 100%;
+        height: 20vmin;
+
+      }
+    }
+
+    &.landscape {
+      .button-bar {
+        flex-direction: column;
+        width: 20min;
+        height: 100%;
+
+      }
+    }
   }
 
   h1 {
@@ -58,156 +238,6 @@ body {
     font-size: 5vw;
   }
 
-  .button-bar {
-    position: fixed;
-    float: left;
-    z-index: 1;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 8vmin;
-    gap: 1vmin;
-    align-items: center;
-
-    .home-button {
-      display: flex;
-
-      img {
-        cursor: pointer;
-        width: 8vmin;
-        object-fit: contain;
-      }
-    }
-
-    .leader-avatars {
-      display: flex;
-      flex: 1;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      justify-content: center;
-
-      .leader-avatar {
-        padding-left: 1vmin;
-        cursor: pointer;
-
-        img {
-          border-radius: 2vmin;
-          width: 6vmin;
-          height: 6vmin;
-        }
-      }
-    }
-
-    .card-button {
-      display: flex;
-
-      .card-button-icon {
-        display: flex;
-
-        >.group-icon {
-          padding-top: 1vmin;
-        }
-      }
-
-      .list-background {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: #1118;
-      }
-
-      .list {
-        position: fixed;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid @orange1;
-        background-color: @orange4;
-
-        .item {
-          display: flex;
-          flex-direction: row;
-          height: 8vmin;
-          align-items: center;
-          padding: 2vmin;
-          cursor: pointer;
-
-          .card-button-icon {
-            display: flex;
-            height: 8vmin;
-          }
-
-          &:hover {
-            background-color: @orange2;
-          }
-        }
-
-        .current {
-          background-color: @orange3;
-        }
-      }
-
-      img {
-        cursor: pointer;
-        width: 6vmin;
-        object-fit: contain;
-        margin-right: 1vmin;
-      }
-
-      .group-icon {
-        display: flex;
-        flex-direction: column;
-        justify-items: center;
-        text-align: center;
-        cursor: pointer;
-        width: 6vmin;
-        height: 6vmin;
-        margin-right: 1vmin;
-
-        img {
-          width: 6vmin;
-          height: 6vmin;
-        }
-
-        .label {
-          transform: translateY(-4.7vmin);
-          font-size: 3vmin;
-        }
-
-      }
-    }
-
-    .card-filter {
-      align-content: center;
-      justify-content: center;
-
-      flex: 1;
-
-      input {
-        border-color: @orange1;
-        background-color: @orange3;
-        border-style: solid;
-        border-width: 1px;
-        font-size: 2em;
-        color: @orange2;
-        font-family: @font-family;
-
-        &:focus {
-          outline: none;
-        }
-
-        &::selection {
-          color: @orange3;
-          background: @orange2;
-        }
-
-        &::placeholder {
-          color: @orange4;
-        }
-      }
-    }
-  }
 
   .tiles {
     display: flex;

@@ -33,19 +33,6 @@ type Screen
     | CombatManual
 
 
-type Leader
-    = MaudDib
-    | GurneyHalleck
-    | FeydRauthaHarkonnen
-    | LadyMargotFenring
-    | LadyAmberMetulli
-    | PrincessIrulan
-    | LadyJessica
-    | ReverendMotherJessica
-    | ShaddamConringIV
-    | StabanTuer
-
-
 type CardBarView
     = CardIcon
     | CardList
@@ -148,6 +135,7 @@ buttonBar model =
         [ class "button-bar" ]
         [ simpleBarButton "menu-board.jpg" (Show Board) (model.screen == Board)
         , simpleBarButton "menu-leaders.png" (Show Leaders) (model.screen == Leaders)
+        , cardsButton (model.screen == Cards) model.cardBarView model.cardOptions
         ]
 
 
@@ -155,6 +143,13 @@ buttonBarButton : Bool -> List (Html.Html msg) -> Html.Html msg
 buttonBarButton isActive content =
     div
         [ classList [ ( "button", True ), ( "active", isActive ) ] ]
+        content
+
+
+buttonBarButtonWithCustomClass : String -> Bool -> List (Html.Html msg) -> Html.Html msg
+buttonBarButtonWithCustomClass customClass isActive content =
+    div
+        [ classList [ ( "button", True ), ( "active", isActive ), ( customClass, True ) ] ]
         content
 
 
@@ -167,86 +162,106 @@ simpleBarButton imageSource msg isActive =
         buttonBarButton isActive [ div [ onClick msg ] [ img [ src imageSource ] [] ] ]
 
 
+cardsButton : Bool -> CardBarView -> CardOptions -> Html.Html Msg
+cardsButton isActive cardBarView cardOptions =
+    if isActive then
+        buttonBarButtonWithCustomClass
+            "cards-button"
+            isActive
+            [ div [ onClick ShowCardBarList ] [ img [ src "menu-cards.jpg" ] [] ]
+            , case cardBarView of
+                CardIcon ->
+                    viewCardBarIcon cardOptions.orderBy
 
--- leaderAvatar : ( String, Leader ) -> Html.Html Msg
--- leaderAvatar ( imageSource, leader ) =
---     div
---         [ class "leader-avatar" ]
---         [ a
---             [ onClick <| Show (Leaders leader) ]
---             [ img [ src imageSource ] [] ]
---         ]
--- viewCardBarIcon : CardOrderBy -> Html.Html Msg
--- viewCardBarIcon orderBy =
---     div
---         [ class "card-button" ]
---         [ div [ class "card-button-icon", onClick ShowCardBarList ] [ viewCardOrderImage orderBy ] ]
--- viewCardBarList : CardOrderBy -> Html.Html Msg
--- viewCardBarList currentCardOrderBy =
---     let
---         item : String -> CardOrderBy -> Html.Html Msg
---         item label cardOrderBy =
---             div
---                 [ classList
---                     [ ( "item", True )
---                     , ( "current", cardOrderBy == currentCardOrderBy )
---                     ]
---                 , onClick <| ShowCardBarIcon cardOrderBy
---                 ]
---                 [ viewCardOrderImage cardOrderBy, text label ]
---     in
---     div
---         [ class "card-button" ]
---         [ div
---             [ class "card-button-icon" ]
---             [ viewCardOrderImage currentCardOrderBy
---             ]
---         , div
---             [ class "list-background"
---             , onClick <| ShowCardBarIcon currentCardOrderBy
---             ]
---             []
---         , div
---             [ class "list" ]
---             [ item "Name" CardOrderByAz
---             , item "Persuasion Cost" CardOrderByPersuasionCost
---             , item "Agent Access" CardOrderByAgentAccess
---             , item "Faction Synergy" CardOrderByFactionSynergy
---             , item "Grade" CardOrderByGrade
---             ]
---         ]
--- viewCardOrderImage : CardOrderBy -> Html.Html Msg
--- viewCardOrderImage order =
---     case order of
---         CardOrderByAz ->
---             letterIcon "A-Z"
---         CardOrderByPersuasionCost ->
---             img [ src "persuasion-icon.png" ] []
---         CardOrderByAgentAccess ->
---             img [ src "access-icon.png" ] []
---         CardOrderByFactionSynergy ->
---             img [ src "faction-icon.png" ] []
---         CardOrderByGrade ->
---             img [ src "grade-icon.png" ] []
+                CardList ->
+                    viewCardBarList cardOptions.orderBy
+            ]
+
+    else
+        buttonBarButton isActive [ div [ onClick (Show Cards) ] [ img [ src "menu-cards.jpg" ] [] ] ]
+
+
+viewCardBarIcon : CardOrderBy -> Html.Html Msg
+viewCardBarIcon orderBy =
+    div
+        [ class "card-button" ]
+        [ div [ class "card-button-icon", onClick ShowCardBarList ] [ viewCardOrderImage orderBy ] ]
+
+
+viewCardBarList : CardOrderBy -> Html.Html Msg
+viewCardBarList currentCardOrderBy =
+    let
+        item : String -> CardOrderBy -> Html.Html Msg
+        item label cardOrderBy =
+            div
+                [ classList
+                    [ ( "item", True )
+                    , ( "current", cardOrderBy == currentCardOrderBy )
+                    ]
+                , onClick <| ShowCardBarIcon cardOrderBy
+                ]
+                [ viewCardOrderImage cardOrderBy, text label ]
+    in
+    div
+        [ class "card-button" ]
+        [ div
+            [ class "card-button-icon" ]
+            [ viewCardOrderImage currentCardOrderBy
+            ]
+        , div
+            [ class "list-background"
+            , onClick <| ShowCardBarIcon currentCardOrderBy
+            ]
+            []
+        , div
+            [ class "list" ]
+            [ item "Name" CardOrderByAz
+            , item "Persuasion Cost" CardOrderByPersuasionCost
+            , item "Agent Access" CardOrderByAgentAccess
+            , item "Faction Synergy" CardOrderByFactionSynergy
+            , item "Grade" CardOrderByGrade
+            ]
+        ]
+
+
+viewCardOrderImage : CardOrderBy -> Html.Html Msg
+viewCardOrderImage order =
+    case order of
+        CardOrderByAz ->
+            letterIcon "A-Z"
+
+        CardOrderByPersuasionCost ->
+            img [ src "persuasion-icon.png" ] []
+
+        CardOrderByAgentAccess ->
+            img [ src "access-icon.png" ] []
+
+        CardOrderByFactionSynergy ->
+            img [ src "faction-icon.png" ] []
+
+        CardOrderByGrade ->
+            img [ src "grade-icon.png" ] []
 
 
 viewScreen : Model -> Html.Html Msg
 viewScreen model =
-    case model.screen of
-        Board ->
-            viewFullScreenImage "board.jpg" model
+    div [ class "content" ]
+        [ case model.screen of
+            Board ->
+                viewFullScreenImage "board.jpg" model
 
-        Leaders ->
-            viewLeaders
+            Leaders ->
+                viewLeaders
 
-        Cards ->
-            viewCards model.cardOptions
+            Cards ->
+                viewCards model.cardOptions
 
-        Manuals ->
-            viewManuals
+            Manuals ->
+                viewManuals
 
-        CombatManual ->
-            viewFullScreenImage "combatreference.png" model
+            CombatManual ->
+                viewFullScreenImage "combatreference.png" model
+        ]
 
 
 viewLeaders : Html.Html Msg

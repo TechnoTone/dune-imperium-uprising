@@ -4,22 +4,17 @@ import Browser
 import Browser.Dom as Dom
 import Browser.Events as Browser
 import Cards exposing (CardOptions, CardOrderBy(..))
-import Html exposing (Attribute, a, button, div, h1, h3, img, input, span, text)
-import Html.Attributes exposing (class, classList, href, id, placeholder, src, style, value)
-import Html.Events exposing (onClick, onInput)
-import Html.Events.Extra.Mouse as Mouse
-import Html.Events.Extra.Touch as Touch exposing (Touch)
+import Html exposing (Attribute, a, div, h1, h3, img, text)
+import Html.Attributes exposing (class, classList, href, src, value)
+import Html.Events exposing (onClick)
 import Icons exposing (letterIcon)
 import Task
 
 
 type alias Model =
     { screen : Screen
-    , viewportSize : ( Float, Float )
     , viewOrientation : Orientation
-    , zoomPosition : ( Float, Float )
     , zoomState : ZoomState
-    , touches : List Touch
     , cardBarView : CardBarView
     , cardOptions : CardOptions
     }
@@ -52,39 +47,18 @@ type Msg
     = GotViewport Dom.Viewport
     | WindowResize Int Int
     | Show Screen
-    | FullScreenMouseDown ( Float, Float )
-    | FullScreenMouseUp ( Float, Float )
-    | FullScreenMouseOver ( Float, Float )
     | SetZoomState ZoomState
-    | Touch TouchEventType Touch.Event
     | ShowCardBarIcon CardOrderBy
     | ShowCardBarList
     | CardFilterChange String
-
-
-type TouchEventType
-    = TouchStart
-    | TouchMove
-    | TouchEnd
-
-
-type Action
-    = Left
-    | Right
-    | Up
-    | Down
-    | None
 
 
 initModel : () -> ( Model, Cmd Msg )
 initModel =
     always <|
         ( { screen = Board
-          , viewportSize = ( 0, 0 )
           , viewOrientation = Portrait
-          , zoomPosition = ( 0, 0 )
           , zoomState = ZoomedOut
-          , touches = []
           , cardBarView = CardIcon
           , cardOptions = CardOptions CardOrderByAz ""
           }
@@ -318,28 +292,6 @@ viewFullScreenImage url model =
                 ]
 
 
-zoomOffset : ( Float, Float ) -> ( Float, Float ) -> Html.Attribute msg
-zoomOffset ( xZoom, yZoom ) ( xTotal, yTotal ) =
-    style "transform" ("scale(2.5) translate(" ++ String.fromFloat (xTotal / 2 - xZoom) ++ "px, " ++ String.fromFloat (yTotal / 2 - yZoom) ++ "px)")
-
-
-
--- let
---     xPercent =
---         xZoom / xTotal * -100 + 50
---     yPercent =
---         yZoom / yTotal * -100 + 50
--- in
--- style
---     "transform"
---     ("scale(2.5) translate("
---         ++ String.fromFloat xPercent
---         ++ "%,"
---         ++ String.fromFloat yPercent
---         ++ "%)"
---     )
-
-
 tileList : String -> List ( String, String, Attribute Msg ) -> Html.Html Msg
 tileList heading tiles =
     let
@@ -400,28 +352,16 @@ update msg model =
     in
     case msg of
         GotViewport viewPort ->
-            updateModel (setViewport viewPort)
+            updateModel (setOrientationFromViewPort viewPort)
 
         WindowResize width height ->
-            updateModel (setWindowSize width height)
+            updateModel (setOrientation width height)
 
         Show screen ->
             updateModel (\_ -> { model | screen = screen })
 
-        FullScreenMouseDown ( x, y ) ->
-            updateModel (setZoomPosition ( x, y ) >> setZoomState ZoomedIn)
-
-        FullScreenMouseUp ( x, y ) ->
-            updateModel (setZoomPosition ( x, y ) >> setZoomState ZoomedOut)
-
-        FullScreenMouseOver ( x, y ) ->
-            updateModel (setZoomPosition ( x, y ))
-
         SetZoomState zoomState ->
             updateModel (setZoomState zoomState)
-
-        Touch eventType eventData ->
-            ( handleTouch eventType eventData model, Cmd.none )
 
         ShowCardBarIcon cardOrderBy ->
             updateModel
@@ -456,32 +396,13 @@ setCardOrderBy order options =
     { options | orderBy = order }
 
 
-setZoomPosition : ( Float, Float ) -> Model -> Model
-setZoomPosition zoomPosition model =
-    { model | zoomPosition = zoomPosition }
-
-
 setZoomState : ZoomState -> Model -> Model
 setZoomState zoomState model =
     { model | zoomState = zoomState }
 
 
-setViewport : Dom.Viewport -> Model -> Model
-setViewport viewport model =
-    { model | viewportSize = ( viewport.scene.width, viewport.scene.height ) } |> updateViewOrientation
-
-
-setWindowSize : Int -> Int -> Model -> Model
-setWindowSize width height model =
-    { model | viewportSize = ( toFloat width, toFloat height ) } |> updateViewOrientation
-
-
-updateViewOrientation : Model -> Model
-updateViewOrientation model =
-    let
-        ( width, height ) =
-            model.viewportSize
-    in
+setOrientation : Int -> Int -> Model -> Model
+setOrientation width height model =
     if width > height then
         { model | viewOrientation = Landscape }
 
@@ -489,77 +410,9 @@ updateViewOrientation model =
         { model | viewOrientation = Portrait }
 
 
-handleTouch : TouchEventType -> Touch.Event -> Model -> Model
-handleTouch eventType eventData model =
-    case eventType of
-        TouchStart ->
-            model
-                |> updateTouches (addTouches eventData.changedTouches)
-                |> updateZoomStateFromTouches
-                |> updateZoomPositionFromTouches
-
-        TouchMove ->
-            model
-                |> updateTouches (moveTouches eventData.changedTouches)
-                |> updateZoomPositionFromTouches
-
-        TouchEnd ->
-            model
-                |> updateTouches (removeTouches eventData.changedTouches)
-                |> updateZoomStateFromTouches
-                |> updateZoomPositionFromTouches
-
-
-updateZoomPositionFromTouches : Model -> Model
-updateZoomPositionFromTouches model =
-    let
-        firstTouch =
-            List.head model.touches
-    in
-    case firstTouch of
-        Just touch ->
-            { model | zoomPosition = touch.clientPos }
-
-        Nothing ->
-            model
-
-
-updateZoomStateFromTouches : Model -> Model
-updateZoomStateFromTouches model =
-    let
-        firstTouchId =
-            List.head model.touches |> Maybe.map .identifier
-    in
-    case firstTouchId of
-        Just 0 ->
-            { model | zoomState = ZoomedIn }
-
-        _ ->
-            { model | zoomState = ZoomedOut }
-
-
-updateTouches : (List Touch -> List Touch) -> Model -> Model
-updateTouches fn model =
-    { model | touches = fn model.touches }
-
-
-addTouches : List Touch -> List Touch -> List Touch
-addTouches newTouches existingTouches =
-    List.append existingTouches newTouches
-
-
-moveTouches : List Touch -> List Touch -> List Touch
-moveTouches newTouches _ =
-    newTouches
-
-
-removeTouches : List Touch -> List Touch -> List Touch
-removeTouches toRemove existingTouches =
-    let
-        ids =
-            toRemove |> List.map .identifier
-    in
-    existingTouches |> List.filter (\t -> not <| List.member t.identifier ids)
+setOrientationFromViewPort : Dom.Viewport -> Model -> Model
+setOrientationFromViewPort viewport model =
+    setOrientation (round viewport.scene.width) (round viewport.scene.height) model
 
 
 
@@ -585,5 +438,4 @@ main =
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.batch
-        [ Browser.onResize WindowResize
-        ]
+        [ Browser.onResize WindowResize ]

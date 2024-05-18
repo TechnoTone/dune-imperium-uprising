@@ -1,6 +1,6 @@
 module Cards exposing (Card, CardOptions, CardOrderBy(..), CardsGroup, get, view)
 
-import Html exposing (Html, cite, div, img, text)
+import Html exposing (Html, div, img)
 import Html.Attributes exposing (class, name, src)
 import Icons exposing (agentAccessIcon, factionIcon, gradeIcon, letterIcon, persuasionIcon)
 import List.Extra as List

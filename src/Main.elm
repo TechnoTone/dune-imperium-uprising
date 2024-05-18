@@ -55,6 +55,7 @@ type Msg
     | FullScreenMouseDown ( Float, Float )
     | FullScreenMouseUp ( Float, Float )
     | FullScreenMouseOver ( Float, Float )
+    | SetZoomState ZoomState
     | Touch TouchEventType Touch.Event
     | ShowCardBarIcon CardOrderBy
     | ShowCardBarList
@@ -290,30 +291,31 @@ viewManuals =
 
 
 viewFullScreenImage : String -> Model -> Html.Html Msg
-viewFullScreenImage url { zoomState, zoomPosition, viewportSize } =
-    div
-        [ class "fullscreen-image-container"
-        , Mouse.onDown (.clientPos >> FullScreenMouseDown)
-        , Mouse.onUp (.clientPos >> FullScreenMouseUp)
-        , Mouse.onMove (.clientPos >> FullScreenMouseOver)
-        , Touch.onStart (Touch TouchStart)
-        , Touch.onMove (Touch TouchMove)
-        , Touch.onEnd (Touch TouchEnd)
-        ]
-        (case zoomState of
-            ZoomedOut ->
-                [ img [ class "fullscreen-image zoomed-out", src url ] []
+viewFullScreenImage url model =
+    case model.zoomState of
+        ZoomedOut ->
+            div
+                [ class "fullscreen-image-container"
+                , onClick (SetZoomState ZoomedIn)
                 ]
-
-            ZoomedIn ->
                 [ img
-                    [ class "fullscreen-image zoomed-in"
+                    [ class "fullscreen-image zoomed-out"
                     , src url
-                    , zoomOffset zoomPosition viewportSize
                     ]
                     []
                 ]
-        )
+
+        ZoomedIn ->
+            div
+                [ class "fullscreen-image-container"
+                , onClick (SetZoomState ZoomedOut)
+                ]
+                [ img
+                    [ class "fullscreen-image zoomed-in"
+                    , src url
+                    ]
+                    []
+                ]
 
 
 zoomOffset : ( Float, Float ) -> ( Float, Float ) -> Html.Attribute msg
@@ -414,6 +416,9 @@ update msg model =
 
         FullScreenMouseOver ( x, y ) ->
             updateModel (setZoomPosition ( x, y ))
+
+        SetZoomState zoomState ->
+            updateModel (setZoomState zoomState)
 
         Touch eventType eventData ->
             ( handleTouch eventType eventData model, Cmd.none )

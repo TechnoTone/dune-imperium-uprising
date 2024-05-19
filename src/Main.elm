@@ -241,18 +241,19 @@ viewScreen model =
 
 viewLeaders : Html.Html Msg
 viewLeaders =
-    div [ class "leaders" ]
-        [ div [ class "leader" ] [ img [ src "leader-mauddib.png" ] [] ]
-        , div [ class "leader" ] [ img [ src "leader-gurneyhalleck.png" ] [] ]
-        , div [ class "leader" ] [ img [ src "leader-feydrauthaharkonnen.png" ] [] ]
-        , div [ class "leader" ] [ img [ src "leader-ladymargotfenring.png" ] [] ]
-        , div [ class "leader" ] [ img [ src "leader-ladyambermetulli.png" ] [] ]
-        , div [ class "leader" ] [ img [ src "leader-princessirulan.png" ] [] ]
-        , div [ class "leader" ] [ img [ src "leader-ladyjessica.png" ] [] ]
-        , div [ class "leader" ] [ img [ src "leader-reverendmotherjessica.png" ] [] ]
-        , div [ class "leader" ] [ img [ src "leader-shaddamconringiv.png" ] [] ]
-        , div [ class "leader" ] [ img [ src "leader-stabantuer.png" ] [] ]
-        ]
+    [ "leader-mauddib.png"
+    , "leader-gurneyhalleck.png"
+    , "leader-feydrauthaharkonnen.png"
+    , "leader-ladymargotfenring.png"
+    , "leader-ladyambermetulli.png"
+    , "leader-princessirulan.png"
+    , "leader-ladyjessica.png"
+    , "leader-reverendmotherjessica.png"
+    , "leader-shaddamconringiv.png"
+    , "leader-stabantuer.png"
+    ]
+        |> List.map (\imgSrc -> div [ class "leader" ] [ img [ src imgSrc ] [] ])
+        |> div [ class "leaders" ]
 
 
 viewManuals : Html.Html Msg

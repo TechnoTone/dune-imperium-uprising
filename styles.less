@@ -71,7 +71,7 @@ body {
         .card-button-icon {
           display: flex;
 
-          >.group-icon {
+          > .group-icon {
             padding-top: 1vmin;
           }
         }
@@ -286,7 +286,6 @@ body {
     &::-webkit-scrollbar-thumb {
       background: @orange1;
     }
-
   }
 
   .fullscreen-image {
@@ -323,13 +322,6 @@ body {
   }
 
   .cards-container {
-    margin-top: 8vmin;
-    background-color: @orange3;
-    width: 100%;
-    height: 100%-7vmin;
-    overflow: scroll;
-    position: fixed;
-
     .cards-body {
       grid-template-columns: fit-content(1ch) 1fr;
       display: grid;

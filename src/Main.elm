@@ -140,10 +140,9 @@ simpleBarButton imageSource msg isActive =
 cardsButton : Bool -> CardBarView -> CardOptions -> Html.Html Msg
 cardsButton isActive cardBarView cardOptions =
     if isActive then
-        buttonBarButtonWithCustomClass
-            "cards-button"
+        buttonBarButton
             isActive
-            [ div [ onClick ShowCardBarList ] [ img [ src "menu-cards.jpg" ] [] ]
+            [ div [ onClick ShowCardBarList, class "cards-button" ] [ img [ src "menu-cards.jpg" ] [] ]
             , case cardBarView of
                 CardIcon ->
                     viewCardBarIcon cardOptions.orderBy

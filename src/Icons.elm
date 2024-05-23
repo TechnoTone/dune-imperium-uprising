@@ -4,44 +4,59 @@ import Html exposing (Html, div, img, text)
 import Html.Attributes exposing (class, src)
 
 
-letterIcon : String -> Html msg
+letterIcon : String -> List (Html msg)
 letterIcon letter =
-    div
+    [ div
         [ class "group-icon" ]
-        [ img [ src "letter-icon.png" ] []
+        [ div [ class "icon" ]
+            [ img [ src "letter-icon.png" ] []
+            ]
         , div [ class "label" ] [ text letter ]
         ]
+    ]
 
 
-persuasionIcon : Int -> Html msg
+persuasionIcon : Int -> List (Html msg)
 persuasionIcon persuasion =
-    div
+    [ div
         [ class "group-icon persuasion-icon" ]
-        [ img [ src "persuasion-icon.png" ] []
+        [ div [ class "icon" ]
+            [ img [ src "persuasion-icon.png" ] []
+            ]
         , div [ class "label" ] [ text (String.fromInt persuasion) ]
         ]
+    ]
 
 
-agentAccessIcon : String -> Html msg
+agentAccessIcon : String -> List (Html msg)
 agentAccessIcon imageSrc =
-    div
+    [ div
         [ class "group-icon agent-access-icon" ]
-        [ img [ src imageSrc ] []
+        [ div [ class "icon" ]
+            [ img [ src imageSrc ] []
+            ]
         ]
+    ]
 
 
-factionIcon : String -> Html msg
+factionIcon : String -> List (Html msg)
 factionIcon imageSrc =
-    div
+    [ div
         [ class "group-icon faction-icon" ]
-        [ img [ src imageSrc ] []
+        [ div [ class "icon" ]
+            [ img [ src imageSrc ] []
+            ]
         ]
+    ]
 
 
-gradeIcon : String -> Html msg
+gradeIcon : String -> List (Html msg)
 gradeIcon grade =
-    div
+    [ div
         [ class "group-icon grade-icon" ]
-        [ img [ src "grade-icon.png" ] []
+        [ div [ class "icon" ]
+            [ img [ src "grade-icon.png" ] []
+            ]
         , div [ class "label" ] [ text grade ]
         ]
+    ]

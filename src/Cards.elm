@@ -381,14 +381,14 @@ groupedBy orderBy cardList =
 view : CardsGroup -> List (Html msg)
 view cardsGroup =
     let
-        groupsFn : (a -> Html msg) -> List ( a, List Card ) -> List (Html msg)
+        groupsFn : (a -> List (Html msg)) -> List ( a, List Card ) -> List (Html msg)
         groupsFn iconFn groupsList =
             groupsList
                 |> List.concatMap
                     (\( groupId, cards ) ->
                         [ div
                             [ class "group-header" ]
-                            [ iconFn groupId ]
+                            (iconFn groupId)
                         , viewCards cards
                         ]
                     )

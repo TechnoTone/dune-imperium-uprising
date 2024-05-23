@@ -7,7 +7,7 @@ import Cards exposing (CardOptions, CardOrderBy(..))
 import Html exposing (Attribute, a, div, h1, h3, img, text)
 import Html.Attributes exposing (class, classList, href, src, value)
 import Html.Events exposing (onClick)
-import Icons exposing (letterIcon)
+import Icons exposing (gradeIcon, letterIcon, persuasionIcon)
 import Task
 
 
@@ -130,11 +130,7 @@ buttonBarButtonWithCustomClass customClass isActive content =
 
 simpleBarButton : String -> Msg -> Bool -> Html.Html Msg
 simpleBarButton imageSource msg isActive =
-    if isActive then
-        buttonBarButton isActive [ div [ onClick msg ] [ img [ src imageSource ] [] ] ]
-
-    else
-        buttonBarButton isActive [ div [ onClick msg ] [ img [ src imageSource ] [] ] ]
+    buttonBarButton isActive [ img [ onClick msg, class "button-image", src imageSource ] [] ]
 
 
 cardsButton : Bool -> CardBarView -> CardOptions -> Html.Html Msg
@@ -142,7 +138,7 @@ cardsButton isActive cardBarView cardOptions =
     if isActive then
         buttonBarButton
             isActive
-            [ div [ onClick ShowCardBarList, class "cards-button" ] [ img [ src "menu-cards.jpg" ] [] ]
+            [ img [ onClick ShowCardBarList, class "button-image", src "menu-cards.jpg" ] []
             , case cardBarView of
                 CardIcon ->
                     viewCardBarIcon cardOptions.orderBy
@@ -152,14 +148,14 @@ cardsButton isActive cardBarView cardOptions =
             ]
 
     else
-        buttonBarButton isActive [ div [ onClick (Show Cards) ] [ img [ src "menu-cards.jpg" ] [] ] ]
+        buttonBarButton isActive [ div [ onClick (Show Cards) ] [ img [ class "button-image", src "menu-cards.jpg" ] [] ] ]
 
 
 viewCardBarIcon : CardOrderBy -> Html.Html Msg
 viewCardBarIcon orderBy =
     div
         [ class "card-button" ]
-        [ div [ class "card-button-icon", onClick ShowCardBarList ] [ viewCardOrderImage orderBy ] ]
+        [ div [ class "card-button-icon", onClick ShowCardBarList ] (viewCardOrderImage orderBy) ]
 
 
 viewCardBarList : CardOrderBy -> Html.Html Msg
@@ -174,14 +170,18 @@ viewCardBarList currentCardOrderBy =
                     ]
                 , onClick <| ShowCardBarIcon cardOrderBy
                 ]
-                [ viewCardOrderImage cardOrderBy, text label ]
+                [ div
+                    [ class "card-button-icon"
+                    ]
+                    (viewCardOrderImage cardOrderBy)
+                , div [ class "description" ] [ text label ]
+                ]
     in
     div
         [ class "card-button" ]
         [ div
             [ class "card-button-icon" ]
-            [ viewCardOrderImage currentCardOrderBy
-            ]
+            (viewCardOrderImage currentCardOrderBy)
         , div
             [ class "list-background"
             , onClick <| ShowCardBarIcon currentCardOrderBy
@@ -198,23 +198,29 @@ viewCardBarList currentCardOrderBy =
         ]
 
 
-viewCardOrderImage : CardOrderBy -> Html.Html Msg
+viewCardOrderImage : CardOrderBy -> List (Html.Html Msg)
 viewCardOrderImage order =
     case order of
         CardOrderByAz ->
             letterIcon "A-Z"
 
         CardOrderByPersuasionCost ->
-            img [ src "persuasion-icon.png" ] []
+            persuasionIcon 9
 
         CardOrderByAgentAccess ->
-            img [ src "access-icon.png" ] []
+            [ div
+                [ class "group-icon agent-access-icon" ]
+                [ div [] [ img [ src "access-icon.png" ] [] ] ]
+            ]
 
         CardOrderByFactionSynergy ->
-            img [ src "faction-icon.png" ] []
+            [ div
+                [ class "group-icon faction-icon" ]
+                [ img [ src "faction-icon.png" ] [] ]
+            ]
 
         CardOrderByGrade ->
-            img [ src "grade-icon.png" ] []
+            gradeIcon "A+"
 
 
 viewScreen : Model -> Html.Html Msg

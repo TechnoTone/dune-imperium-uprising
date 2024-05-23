@@ -46,8 +46,9 @@ body {
 
       .button {
         display: flex;
+        position: relative;
 
-        img {
+        .button-image {
           cursor: pointer;
           object-fit: contain;
           border: 0.5vmin solid black;
@@ -59,25 +60,54 @@ body {
         }
 
         &.active {
-          img {
+          .button-image {
             border-color: @orange2;
           }
         }
       }
 
       .card-button {
+        position: absolute;
+        width: 100%;
+        height: 100%;
         display: flex;
+        align-items: center;
 
         .card-button-icon {
-          display: flex;
+          position: absolute;
+          width: 100%;
+          height: 100%;
 
-          > .group-icon {
-            padding-top: 1vmin;
+          .group-icon {
+            .icon {
+              width: 100%;
+              height: 100%;
+              display: flex;
+              place-items: center;
+
+              img {
+                width: 6vmin;
+                height: 6vmin;
+                object-fit: contain;
+                flex: 1;
+              }
+            }
+
+            .label {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              place-items: center;
+              place-content: center;
+              cursor: pointer;
+              font-size: 3vmin;
+            }
           }
         }
 
         .list-background {
-          position: absolute;
+          position: fixed;
           left: 0;
           top: 0;
           width: 100vw;
@@ -86,60 +116,47 @@ body {
         }
 
         .list {
-          position: fixed;
+          position: absolute;
+          left: 0;
+          top: 0;
           display: flex;
           flex-direction: column;
           border: 1px solid @orange1;
           background-color: @orange4;
+          z-index: 1;
 
           .item {
             display: flex;
-            flex-direction: row;
             height: 8vmin;
+            width: 31vmin;
             align-items: center;
-            padding: 2vmin;
+            padding: 1vmin;
             cursor: pointer;
 
-            .card-button-icon {
-              display: flex;
-              height: 8vmin;
+            &.current {
+              background-color: @orange3;
             }
 
             &:hover {
               background-color: @orange2;
             }
-          }
 
-          .current {
-            background-color: @orange3;
-          }
-        }
+            .card-button-icon {
+              width: 6vmin;
+              height: 6vmin;
+            }
 
-        img {
-          cursor: pointer;
-          width: 6vmin;
-          object-fit: contain;
-          margin-right: 1vmin;
+            .description {
+              margin-left: 8vmin;
+              font-size: 3vmin;
+            }
+          }
         }
 
         .group-icon {
-          display: flex;
-          flex-direction: column;
-          justify-items: center;
-          text-align: center;
-          cursor: pointer;
-          width: 6vmin;
-          height: 6vmin;
-          margin-right: 1vmin;
-
           img {
             width: 6vmin;
             height: 6vmin;
-          }
-
-          .label {
-            transform: translateY(-4.7vmin);
-            font-size: 3vmin;
           }
         }
       }
@@ -183,10 +200,8 @@ body {
         width: 100%;
         // height: 15vmin;
 
-        .button {
-          img {
-            height: 15vmin;
-          }
+        .button-image {
+          height: 15vmin;
         }
       }
 
@@ -209,10 +224,8 @@ body {
         width: 15vmin;
         // height: 100%;
 
-        .button {
-          img {
-            width: 15vmin;
-          }
+        .button-image {
+          width: 15vmin;
         }
       }
 
@@ -367,16 +380,27 @@ body {
 .group-icon {
   display: flex;
   flex-direction: column;
-  justify-items: center;
+  place-items: center;
+  place-content: center;
   text-align: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
 
-  img {
+  .icon {
+    position: absolute;
     width: 4vmin;
     height: 4vmin;
+
+    img {
+      width: 4vmin;
+      height: 4vmin;
+    }
   }
 
   .label {
-    transform: translateY(-3vmin);
+    position: absolute;
     font-size: 2vmin;
   }
 }

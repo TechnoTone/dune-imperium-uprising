@@ -25,6 +25,7 @@ type Screen
     | Leaders
     | Cards
     | Combat
+    | Manuals
 
 
 type CardBarView
@@ -111,6 +112,7 @@ buttonBar model =
         , simpleBarButton "menu-leaders.png" (Show Leaders) (model.screen == Leaders)
         , cardsButton (model.screen == Cards) model.cardBarView model.cardOptions
         , simpleBarButton "menu-combat.png" (Show Combat) (model.screen == Combat)
+        , simpleBarButton "menu-manuals.png" (Show Manuals) (model.screen == Manuals)
         ]
 
 
@@ -238,6 +240,9 @@ viewScreen model =
 
             Combat ->
                 viewFullScreenImage "combatreference.png" model
+
+            Manuals ->
+                viewManuals
         ]
 
 
@@ -321,6 +326,15 @@ viewCardList options =
     options
         |> Cards.get
         |> Cards.view
+
+
+viewManuals : Html.Html Msg
+viewManuals =
+    tileList "Manuals"
+        [ ( "Rulebook (pdf)", "manual-rulebook.png", href "rulebook.pdf" )
+        , ( "Supplements (pdf)", "manual-supplements.png", href "supplements.pdf" )
+        , ( "FAQ (pdf)", "manual-faq.png", href "faq.pdf" )
+        ]
 
 
 

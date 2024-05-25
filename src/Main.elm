@@ -24,8 +24,7 @@ type Screen
     = Board
     | Leaders
     | Cards
-    | Manuals
-    | CombatManual
+    | Combat
 
 
 type CardBarView
@@ -111,6 +110,7 @@ buttonBar model =
         [ simpleBarButton "menu-board.jpg" (Show Board) (model.screen == Board)
         , simpleBarButton "menu-leaders.png" (Show Leaders) (model.screen == Leaders)
         , cardsButton (model.screen == Cards) model.cardBarView model.cardOptions
+        , simpleBarButton "menu-combat.png" (Show Combat) (model.screen == Combat)
         ]
 
 
@@ -236,10 +236,7 @@ viewScreen model =
             Cards ->
                 viewCards model.cardOptions
 
-            Manuals ->
-                viewManuals
-
-            CombatManual ->
+            Combat ->
                 viewFullScreenImage "combatreference.png" model
         ]
 
@@ -259,15 +256,6 @@ viewLeaders =
     ]
         |> List.map (\imgSrc -> div [ class "leader" ] [ img [ src imgSrc ] [] ])
         |> div [ class "leaders" ]
-
-
-viewManuals : Html.Html Msg
-viewManuals =
-    tileList "Manuals"
-        [ ( "Rulebook (pdf)", "manual-rulebook.png", href "rulebook.pdf" )
-        , ( "Supplements (pdf)", "manual-supplements.png", href "supplements.pdf" )
-        , ( "Combat", "manual-combat.png", onClick <| Show CombatManual )
-        ]
 
 
 viewFullScreenImage : String -> Model -> Html.Html Msg
